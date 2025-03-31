@@ -57,12 +57,16 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
             <div id="forgroundDiv">
                 <h2>Add a new property</h2>
                 <form onSubmit={submitForm} id='newPropertyForm'>
-                    <input type="text" id="addressInput" placeholder='Address' value={addressInput} onChange={handleInputChange}/>
-                    <input type="number" id="zipCodeInput" placeholder='Zip' value={zipCodeInput} onChange={handleInputChange}/>
-                    <input type="text" id="cityInput" placeholder='City' value={cityInput} onChange={handleInputChange}/>
-                    <input type="text" id="countryInput" placeholder='Country' value={countryInput} onChange={handleInputChange}/>
-                    <input type="number" id="nbrOfApInput" placeholder='Number of units' value={nbrOfApInput} onChange={handleInputChange}/>      
-                    <button>Save</button>
+                    <div>
+                        <input type="text" id="addressInput" placeholder='Address' value={addressInput} onChange={handleInputChange}/>
+                        <input type="number" id="zipCodeInput" placeholder='Zip' value={zipCodeInput} onChange={handleInputChange}/>
+                        <input type="text" id="cityInput" placeholder='City' value={cityInput} onChange={handleInputChange}/>
+                        <input type="text" id="countryInput" placeholder='Country' value={countryInput} onChange={handleInputChange}/>
+                        <input type="number" id="nbrOfApInput" placeholder='Number of units' value={nbrOfApInput} onChange={handleInputChange}/>   
+                    </div>
+                    <div>
+                        <button>Save</button>
+                    </div>
                 </form>
                 <div>
                 <button onClick={() => {handleClick()}}>Close</button>

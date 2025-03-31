@@ -10,7 +10,7 @@ function PropertyId({ authState }) {
     const { propertyId } = useParams();
 
     // Adding useNavigate to navigate to homepage
-        const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // redirect to SingUp function
     const redirectTo = (destination) => {
@@ -23,7 +23,6 @@ function PropertyId({ authState }) {
             if (authState.isLoggedIn) {
                 const userProperty = await API.getPropertyById(propertyId, authState.token)
                 setProperty(userProperty);
-                console.log(userProperty)
                 return
             }
         };
@@ -31,6 +30,12 @@ function PropertyId({ authState }) {
         getProperty();
     }, [authState, propertyId]);
 
+    const deleteProperty = async () => {
+        const deletedProperty = await API.deleteProperty(propertyId, authState.token);
+        console.log(deletedProperty)
+        redirectTo("home")
+        return
+    }
 
     if (property.address) {
         return (
@@ -41,7 +46,7 @@ function PropertyId({ authState }) {
                 <div id='bannerBtns'>
                 <button onClick={() => {redirectTo("home")}}>Go back</button>
                 <button>Edit</button>
-                <button>Delete</button>
+                <button onClick={deleteProperty}>Delete</button>
                 </div>
                 </section>
                 <Outlet context={[property]} />

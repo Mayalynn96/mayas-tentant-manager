@@ -12,6 +12,7 @@ function Home({ authState }) {
     //Handle display for adding new property
     const handleClick = () => {
       setIsVisible(!isVisible);
+      console.log(isVisible)
     };
 
     // creating properties const
@@ -36,6 +37,7 @@ function Home({ authState }) {
             if (authState.isLoggedIn) {
                 const userProperties = await API.getUserProperties(authState.token);
                 setProperties(userProperties);
+                console.log(userProperties)
                 return 
             }
         }
@@ -49,13 +51,14 @@ function Home({ authState }) {
                 <Loading />
             </main>
         )
-    } else if (authState.isLoggedIn && !properties[1]) {
+    } else if (authState.isLoggedIn && !properties[0]) {
         return (
             <main>
                 <h1>Welcome {authState.userData.fullName}</h1>
                 <p>Please add a property to start</p>
                 <div id='allPropertyBtns'>
-                    <button className='propertyBtn'>Add new Property</button>
+                <button className='propertyBtn' onClick={() => handleClick()}>Add new Property</button>
+                {isVisible && <NewProperty handleClick={handleClick} properties={properties} setProperties={setProperties} authState={authState}/>}
                 </div>
             </main>
         )
@@ -71,7 +74,7 @@ function Home({ authState }) {
                         return (
                             <button className='propertyBtn' onClick={() => {gotToProperty(property.id)}} key={index}>
                                 <p style={{ fontWeight: 'bold' }}>{property.address}</p>
-                                <p>{property.city}</p>
+                                <p>{property.zipCode} {property.city}</p>
                                 <p>{property.nbrOfAp} Units</p>
                             </button>
                         )
