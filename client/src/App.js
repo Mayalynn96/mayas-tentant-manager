@@ -1,22 +1,66 @@
-import React from "react";
-// import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import API from './utils/API';
+import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
 import './App.css';
+import SignUp from "./pages/SignUp/SignUp";
+import PropertyId from "./pages/PropertyId/PropertyId";
 
 function App() {
-  const [data, setData] = React.useState(null);
+  const [authState, setAuthState] = useState({
+    isLoading: true,
+    isLoggedIn: false,
+    userData: null,
+    token: null,
+    error: null
+  })
 
-  React.useEffect(() => {
-    fetch("/api")
-    .then((res) => res.json())
-    .then((data) => setData(data.message));
-  }, [])
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+
+    if (savedToken) {
+      API.isValidToken(savedToken).then(tokenData => {
+        if (tokenData.isValid) {
+          setAuthState({
+            isLoading: false,
+            isLoggedIn: true,
+            userData: tokenData.user,
+            token: savedToken,
+            error: null
+          })
+        } else {
+          localStorage.removeItem("token")
+          setAuthState({
+            isLoading: false,
+            isLoggedIn: false,
+            userData: null,
+            token: null,
+            error: "Invalid Token"
+          })
+        }
+      })
+    } else {
+      setAuthState({
+        isLoading: false,
+        isLoggedIn: false,
+        userData: null,
+        token: null,
+        error: "No Token"
+      })
+    }
+  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>{!data ? "Loading..." : data}</p>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+      <Route index element={<Home authState={authState} />} />
+      <Route path="home" element={<Home authState={authState} />} />
+      <Route path="login" element={<Login setAuthState={setAuthState} />} />
+      <Route path="signUp" element={<SignUp setAuthState={setAuthState} />} />
+      <Route path="property/:propertyId" element={<PropertyId authState={authState} />} />
+      </Routes>
+    </Router>
   );
 }
 

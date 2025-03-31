@@ -1,0 +1,31 @@
+#propertyBanner {
+    background-color: rgb(73, 71, 117);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    align-items: center;
+}
+
+#propertyBanner p {
+    width: 50vw;
+    height: 100%;
+    margin: 0;
+
+}
+
+#propertyBanner h3 {
+    height: 100%;
+    margin: 0;
+    padding-left: 10px;
+}
+
+#property {
+    justify-content: flex-start;
+    align-content: center;
+}
+
+#bannerBtns {
+    display: flex;
+    flex-direction: column;
+}

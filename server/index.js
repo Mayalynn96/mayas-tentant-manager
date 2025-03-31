@@ -1,24 +1,30 @@
-const path = require('path');
-const express = require("express");
-const exp = require('constants');
+const express = require('express');
+const allRoutes = require('./controllers');
+const sequelize = require('./config/connection');
+const cors = require('cors');
 
-const PORT = process.env.PORT || 3001;
-
+// Creating app and Port
 const app = express();
+const PORT = process.env.PORT || 3002;
 
-// Node serve the files for the nuild React app
-app.use(express.static(path.resolve(__dirname, '../client/build')));
+// Requiring our models for syncing
+const {
+    User
+} = require('./models');
 
-// Handle GET requests to /api route
-app.get("/api", (req, res) => {
-    res.json({ message: "Hello from server!" });
-});
+// Sets up Express app to handle data parsing
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors())
 
-// All other GET requests not handled before will return the React app
-app.get('*', (req,res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
-});
+// Sets up all routes and static public images
+app.use('/', allRoutes);
+// app.use(express.static('public'));
+// app.use('/images', express.static('images'));
 
-app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
+// Starting server and logging PORT
+sequelize.sync({ force: false }).then(function() {
+    app.listen(PORT, function() {
+    console.log('App listening on PORT ' + PORT);
+    });
 });

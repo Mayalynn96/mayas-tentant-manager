@@ -1,0 +1,30 @@
+{
+  "name": "manage-my-tenants",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build": "cd client && npm install && npm run build",
+    "seed": "node seeds/seed.js"
+  },
+  "engines": {
+    "node": "v18.13.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.1.0",
+    "path": "^0.12.7",
+    "sequelize": "^6.37.6",
+    "sequelize-cli": "^6.6.2"
+  }
+}

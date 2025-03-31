@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS mayasKostenabrechnung_db;
+CREATE DATABASE mayasKostenabrechnung_db;
