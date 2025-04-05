@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const UserRoutes = require('./userController')
-router.use('/api/Users', UserRoutes);
-
-const PropertyRoutes = require('./propertyController')
+const PropertyRoutes = require('./propertyController');
 router.use('/api/Properties', PropertyRoutes);
+
+const UnitRoutes = require('./unitController');
+router.use('/api/Units', UnitRoutes);
+
+const UserRoutes = require('./userController');
+router.use('/api/Users', UserRoutes);
 
 module.exports = router;

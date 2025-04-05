@@ -5,8 +5,7 @@ var bcrypt = require('bcryptjs');
 
 // Calling models needed for User
 const {
-    User,
-    Property
+    User
 } = require('../models');
 
 // Creating get all User route
