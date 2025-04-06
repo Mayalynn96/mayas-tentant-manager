@@ -9,7 +9,9 @@ const PORT = process.env.PORT || 3002;
 
 // Requiring our models for syncing
 const {
-    User
+    User,
+    Property,
+    Unit
 } = require('./models');
 
 // Sets up Express app to handle data parsing

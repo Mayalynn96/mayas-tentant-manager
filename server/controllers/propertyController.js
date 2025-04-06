@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    Property
+    Property,
+    Unit
 } = require('../models');
 
-// Creating get all Properties route
+// Get all Properties route
 router.get('/', (req, res) => {
     Property.findAll().then(data => {
         res.json(data)
@@ -38,14 +39,16 @@ router.get("/allUserProperties", async (req, res) => {
 })
 
 // Get a property by ID
-router.get("/property/:propertyId", async (req, res) => {
+router.get("/:propertyId", async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
         return res.status(403).json({ msg: "you must be logged in to get this property." });
     } try {
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
 
-        const propertyData = await Property.findByPk(req.params.propertyId)
+        const propertyData = await Property.findByPk(req.params.propertyId, {
+            include: {model: Unit}
+        })
 
         if(!propertyData){
             return res.status(404).json({ msg: "No property under this Id." });
@@ -86,6 +89,7 @@ router.post("/", async (req, res) => {
     }
 })
 
+// Update Property Route
 router.put('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
@@ -119,6 +123,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// Delete Property route
 router.delete('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
