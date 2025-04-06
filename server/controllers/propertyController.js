@@ -93,7 +93,7 @@ router.post("/", async (req, res) => {
 router.put('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(403).json({ msg: "you must be logged in to edit a Property" });
+        return res.status(403).json({ msg: "you must be logged in to edit a Unit" });
     }
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
