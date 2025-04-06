@@ -89,6 +89,7 @@ router.post("/", async (req, res) => {
     }
 })
 
+// Update Property Route
 router.put('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
@@ -122,6 +123,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// Delete Property route
 router.delete('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
