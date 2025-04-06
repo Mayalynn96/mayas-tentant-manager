@@ -9,11 +9,11 @@ Tenant.init({
         allowNull:false
     },
     moveInDate:{
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull:false
     },
     moveOutDate:{
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull:true
     }
 }, {

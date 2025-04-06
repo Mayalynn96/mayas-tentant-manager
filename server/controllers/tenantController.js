@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const express = require('express');
 const router = express.Router();
+const dayjs = require('dayjs')
 
 const {
     Tenant,
@@ -29,7 +30,9 @@ router.post("/", async (req, res) => {
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
         
-        const unitData = await Unit.findByPk(req.body.unitId)
+        const unitData = await Unit.findByPk(req.body.unitId, {
+            include: [{model: Tenant}]
+        })
 
         if(!unitData){
             return res.status(404).json({ msg: "No Unit under this Id." });
@@ -37,6 +40,16 @@ router.post("/", async (req, res) => {
 
         if(tokenData.id !== unitData.UserId){
             return res.status(403).json({ msg: "This unit doesn't belong to you so you can not add a tenant." });
+        }
+
+        for(i=0;i<unitData.Tenants.length;i++){
+            if(dayjs(req.body.moveInDate).isBefore(dayjs(unitData.Tenants[i].moveInDate)) && (!req.body.moveOutDate || dayjs(req.body.moveOutDate).isAfter(dayjs(unitData.Tenants[i].moveInDate))) ){
+                return res.status(409).json({msg: `please add move out date before ${dayjs(unitData.Tenants[i].moveInDate).format('DD/MM/YYYY')}`})
+            }
+
+            if(dayjs(req.body.moveInDate).isAfter(dayjs(unitData.Tenants[i].moveInDate)) && (!unitData.Tenants[i].moveOutDate || dayjs(req.body.moveInDate).isBefore(dayjs(unitData.Tenants[i].moveOutDate)))){
+                return res.status(409).json({msg: `There is already a tenant living there from ${dayjs(unitData.Tenants[i].moveInDate).format('DD/MM/YYYY')} please check your dates`})
+            }
         }
 
         const newTenant = await Tenant.create({
@@ -47,7 +60,7 @@ router.post("/", async (req, res) => {
             UserId: tokenData.id
         });
 
-        res.status(201).json({message: "Unit creation successful", data: newTenant});
+        res.status(201).json({message: "Tenant creation successful", data: newTenant});
     } catch (err) {
         res.status(500).json({ message: "Error adding Unit.", error: err.message });
     }
@@ -61,7 +74,7 @@ router.put('/:id', async (req, res) => {
     }
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
-
+moveInDate
         const tenantData = await Tenant.findByPk(req.params.id)
 
         if(!tenantData){
@@ -75,7 +88,7 @@ router.put('/:id', async (req, res) => {
         const updatedTenantData = await tenantData.update({
             fullName: req.body.fullName,
             moveInDate: req.body.moveInDate,
-            moveOutData: req.body.moveOutData,
+            moveOutDate: req.body.moveOutDate,
             UnitId: req.body.unitId,
             UserId: tokenData.id
         });
