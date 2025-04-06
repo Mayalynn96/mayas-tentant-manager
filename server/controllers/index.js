@@ -10,4 +10,7 @@ router.use('/api/Units', UnitRoutes);
 const UserRoutes = require('./userController');
 router.use('/api/Users', UserRoutes);
 
+const TenantRoutes = require('./tenantController');
+router.use('/api/Tenants', TenantRoutes);
+
 module.exports = router;

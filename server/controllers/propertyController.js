@@ -4,7 +4,8 @@ const router = express.Router();
 
 const {
     Property,
-    Unit
+    Unit,
+    Tenant
 } = require('../models');
 
 // Get all Properties route
@@ -47,7 +48,9 @@ router.get("/:propertyId", async (req, res) => {
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
 
         const propertyData = await Property.findByPk(req.params.propertyId, {
-            include: {model: Unit}
+            include: [{model: Unit, 
+                include: [{model: Tenant}]
+            }]
         })
 
         if(!propertyData){
