@@ -74,8 +74,12 @@ router.put('/:id', async (req, res) => {
     }
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
-moveInDate
+
         const tenantData = await Tenant.findByPk(req.params.id)
+
+        const unitData = await Unit.findByPk(req.body.unitId, {
+            include: [{model: Tenant}]
+        })
 
         if(!tenantData){
             return res.status(404).json({ msg: "No tenant under this Id." });
@@ -83,6 +87,20 @@ moveInDate
 
         if(tokenData.id !== tenantData.UserId){
             return res.status(403).json({ msg: "This tenant doesn't belong to you." });
+        }
+
+        for(i=0;i<unitData.Tenants.length;i++){
+            
+            if(unitData.Tenants[i].id != req.params.id){
+               
+                if(dayjs(req.body.moveInDate).isBefore(dayjs(unitData.Tenants[i].moveInDate)) && (!req.body.moveOutDate || dayjs(req.body.moveOutDate).isAfter(dayjs(unitData.Tenants[i].moveInDate))) ){
+                    return res.status(409).json({msg: `please add move out date before ${dayjs(unitData.Tenants[i].moveInDate).format('DD/MM/YYYY')}`})
+                }
+    
+                if(dayjs(req.body.moveInDate).isAfter(dayjs(unitData.Tenants[i].moveInDate)) && (!unitData.Tenants[i].moveOutDate || dayjs(req.body.moveInDate).isBefore(dayjs(unitData.Tenants[i].moveOutDate)))){
+                    return res.status(409).json({msg: `There is already a tenant living there from ${dayjs(unitData.Tenants[i].moveInDate).format('DD/MM/YYYY')} please check your dates`})
+                }
+            }
         }
 
         const updatedTenantData = await tenantData.update({
