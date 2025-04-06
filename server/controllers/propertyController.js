@@ -4,7 +4,8 @@ const router = express.Router();
 
 const {
     Property,
-    Unit
+    Unit,
+    Tenant
 } = require('../models');
 
 // Get all Properties route
@@ -47,7 +48,9 @@ router.get("/:propertyId", async (req, res) => {
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
 
         const propertyData = await Property.findByPk(req.params.propertyId, {
-            include: {model: Unit}
+            include: [{model: Unit, 
+                include: [{model: Tenant}]
+            }]
         })
 
         if(!propertyData){
@@ -93,7 +96,7 @@ router.post("/", async (req, res) => {
 router.put('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(403).json({ msg: "you must be logged in to edit a Property" });
+        return res.status(403).json({ msg: "you must be logged in to edit a Unit" });
     }
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
