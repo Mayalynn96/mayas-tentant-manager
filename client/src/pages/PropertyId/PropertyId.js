@@ -43,7 +43,7 @@ function PropertyId({ authState }) {
                 <section id='propertyBanner'>
                 <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
                 <div id='bannerBtns'>
-                <button onClick={() => {redirectTo("home")}}>Go back</button>
+                <button onClick={() => {redirectTo("home")}}>Home</button>
                 <button>Edit</button>
                 <button onClick={deleteProperty}>Delete</button>
                 </div>
