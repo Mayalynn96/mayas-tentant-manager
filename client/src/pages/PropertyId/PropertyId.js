@@ -23,8 +23,11 @@ function PropertyId({ authState }) {
         setPopUpIsVisible(!popUpIsVisible);
       };
 
+    //Setting Property Data and Unit Data
     const [property, setProperty] = useState([]);
     const { propertyId } = useParams();
+    const [units, setUnits] = useState([]);
+    const [hasUnits, setHasUnits] = useState(false)
 
     // Adding useNavigate to navigate to homepage
     const navigate = useNavigate();
@@ -40,6 +43,10 @@ function PropertyId({ authState }) {
             if (authState.isLoggedIn) {
                 const userProperty = await API.getPropertyById(propertyId, authState.token)
                 setProperty(userProperty);
+                setUnits(userProperty.Units)
+                if(userProperty.Units[0]){
+                    setHasUnits(true)
+                }
                 return
             }
         };
@@ -52,6 +59,55 @@ function PropertyId({ authState }) {
         console.log(deletedProperty)
         redirectTo("home")
         return
+    }
+
+    function UnitSection() {
+        if(!hasUnits){
+            return (
+                <section>
+                    <p>This property has no units yet!</p>
+                    <button>Add Unit</button>
+                </section>
+            )
+        }
+
+        return (
+            <section>
+                <p>Here are your Units!</p>
+                <p>Total Units: {units.length}</p>
+                <div id="allUnits">
+                    <div className='eachUnit'>
+                        <p style={{"font-weight":"bold"}} className='columnA'>Unit Number</p>
+                        <p style={{"font-weight":"bold"}} className='columnB'>Unit Size</p>
+                        <p style={{"font-weight":"bold"}} className='columnC'>floor</p>
+                        <p style={{"font-weight":"bold"}} className='columnD'>Current Tenant</p>
+                    </div>
+                   {units.map(unit => {
+                    
+                    function CurrentUser() {
+                        if (unit.Tenants.length === 0) {
+                            return (
+                                <p className='columnD'>No current tenant</p>
+                            )
+                        } else {
+                            return (
+                                <p className='columnD'>{unit.Tenants[0].firstName} {unit.Tenants[0].lastName} household of {unit.Tenants[0].nbrOfHouseholdMembers} since {unit.Tenants[0].moveInDate}</p>
+                            )
+                        }
+                    }
+                    
+                    return(
+                        <div className='eachUnit' key={unit.id}>
+                            <p className='columnA'>{unit.unitNbr}</p>
+                            <p className='columnB'>{unit.size} m<sup>2</sup></p>
+                            <p className='columnC'>{unit.floor}</p>
+                            <CurrentUser/>
+                        </div>
+                    )
+                   })} 
+                </div>
+            </section>
+        )
     }
 
     if (property.address) {
@@ -77,6 +133,7 @@ function PropertyId({ authState }) {
                 <button onClick={handleDeleteBttn}>Delete</button>
                 </div>
                 </section>
+                <UnitSection/>
                 <Outlet context={[property]} />
             </main>
         )
