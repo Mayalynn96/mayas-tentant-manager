@@ -5,8 +5,16 @@ import './PropertyId.css';
 import Loading from "../../components/Loading/Loading";
 
 function PropertyId({ authState }) {
-    const [property, setProperty] = useState([]);
+    //Set display for Pop Up
+    const [popUpIsVisible, setPopUpIsVisible] = useState(false);
 
+    
+    //Handle display for adding new property
+    const handleDeleteBttn = () => {
+        setPopUpIsVisible(!popUpIsVisible);
+      };
+
+    const [property, setProperty] = useState([]);
     const { propertyId } = useParams();
 
     // Adding useNavigate to navigate to homepage
@@ -40,12 +48,23 @@ function PropertyId({ authState }) {
     if (property.address) {
         return (
             <main id='property'>
+                {popUpIsVisible && 
+                <div id="deletePopUp" className="fade-in" >
+                    <div className='moveToFront'>
+                        <h2>Are you sure you want to delete this property?</h2>
+                        <p>This action is not reversible and all units, tenants and bills will be deleted as well.</p>
+                    </div>
+                    <div className='moveToFront'>
+                        <button onClick={deleteProperty} className='deleteBtnGeneral'>Yes, Delete</button>
+                        <button onClick={handleDeleteBttn}>Cancel</button>
+                    </div>
+                </div>}
                 <section id='propertyBanner'>
                 <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
                 <div id='bannerBtns'>
                 <button onClick={() => {redirectTo("home")}}>Home</button>
                 <button>Edit</button>
-                <button onClick={deleteProperty}>Delete</button>
+                <button onClick={handleDeleteBttn}>Delete</button>
                 </div>
                 </section>
                 <Outlet context={[property]} />

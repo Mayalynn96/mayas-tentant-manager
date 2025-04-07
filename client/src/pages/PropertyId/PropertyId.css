@@ -29,3 +29,22 @@
     display: flex;
     flex-direction: column;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+}
+  
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.deleteBtnGeneral:hover {
+    background-color: rgb(227, 99, 99);
+    color: rgb(255, 255, 255);
+    border-color: white;
+}
