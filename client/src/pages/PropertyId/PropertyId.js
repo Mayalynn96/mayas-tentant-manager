@@ -3,11 +3,20 @@ import API from "../../utils/API";
 import { useParams, Outlet, useNavigate } from "react-router-dom";
 import './PropertyId.css';
 import Loading from "../../components/Loading/Loading";
+import EditProperty from '../../components/EditProperty/EditProperty';
 
 function PropertyId({ authState }) {
     //Set display for Pop Up
     const [popUpIsVisible, setPopUpIsVisible] = useState(false);
 
+    //Set display for updating property
+    const [isVisible, setIsVisible] = useState(false);
+
+    //Handle display for adding new property
+    const handleClick = () => {
+        setIsVisible(!isVisible);
+        console.log(isVisible)
+    };
     
     //Handle display for adding new property
     const handleDeleteBttn = () => {
@@ -48,6 +57,7 @@ function PropertyId({ authState }) {
     if (property.address) {
         return (
             <main id='property'>
+                {isVisible && <EditProperty handleClick={handleClick} property={property} setProperty={setProperty} authState={authState}/>}
                 {popUpIsVisible && 
                 <div id="deletePopUp" className="fade-in" >
                     <div className='moveToFront'>
@@ -63,7 +73,7 @@ function PropertyId({ authState }) {
                 <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
                 <div id='bannerBtns'>
                 <button onClick={() => {redirectTo("home")}}>Home</button>
-                <button>Edit</button>
+                <button onClick={handleClick}>Edit</button>
                 <button onClick={handleDeleteBttn}>Delete</button>
                 </div>
                 </section>

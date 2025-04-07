@@ -33,6 +33,17 @@ const API = {
         });
         return await res.json();
     },
+    updateProperty: async (propertyId, propertyData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
+            method: "Put",
+            body: JSON.stringify(propertyData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     deleteProperty: async (propertyId, token) => {
         const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
             method: "DELETE",
