@@ -29,3 +29,53 @@
     display: flex;
     flex-direction: column;
 }
+
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+}
+  
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+.deleteBtnGeneral:hover {
+    background-color: rgb(227, 99, 99);
+    color: rgb(255, 255, 255);
+    border-color: white;
+}
+
+#allUnits {
+    display: flex;
+    flex-direction: column;
+}
+
+.eachUnit {
+    display: flex;
+    border: 1px;
+}
+
+.eachUnit p {
+    border: 1px solid white;
+    margin: 0;
+    padding: 1px 10px;
+    align-content: end;
+    height: 30px;
+    font-size: 20px;
+}
+
+.columnA, .columnB {
+    width: 150px;
+}
+
+.columnC {
+    width: 50px;
+}
+
+.columnD {
+    width: 500px;
+}

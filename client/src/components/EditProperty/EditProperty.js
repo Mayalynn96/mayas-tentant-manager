@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import './NewProperty.css';
+import './EditProperty.css';
 import API from '../../utils/API';
 
-function NewProperty({handleClick, properties, setProperties, authState}) {
-    const [addressInput, setAddressInput] = useState('');
-    const [zipCodeInput, setZipCodeInput] = useState('');
-    const [cityInput, setCityInput] = useState('');
-    const [countryInput, setCountryInput] = useState('');
+function EditProperty({handleClick, property, setProperty, authState}) {
+    const [addressInput, setAddressInput] = useState(property.address);
+    const [zipCodeInput, setZipCodeInput] = useState(property.zipCode);
+    const [cityInput, setCityInput] = useState(property.city);
+    const [countryInput, setCountryInput] = useState(property.country);
 
     const handleInputChange = (e) => {
         e.preventDefault();
@@ -24,20 +24,16 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
     const submitForm = async (e) => {
         e.preventDefault();
 
-        const newPropertyObject = {
+        const editedPropertyData = {
             "address": addressInput,
             "zipCode": zipCodeInput,
             "city": cityInput,
             "country": countryInput
         };
 
-        const newProperty = await API.createNewProperty(newPropertyObject, authState.token);
+        const updatedProperty = await API.updateProperty(property.id, editedPropertyData, authState.token);
 
-        setProperties([...properties, newProperty.data]);
-        setAddressInput('');
-        setZipCodeInput('');
-        setCityInput('');
-        setCountryInput('');
+        setProperty(updatedProperty.data);
 
         handleClick();
     }
@@ -46,7 +42,7 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
         <div id="newPropertyDiv">
             <div id="backgroundDiv"></div>
             <div id="forgroundDiv">
-                <h2>Add a new property</h2>
+                <h2>Update property</h2>
                 <form onSubmit={submitForm} id='newPropertyForm'>
                     <div>
                         <input type="text" id="addressInput" placeholder='Address' value={addressInput} onChange={handleInputChange}/>
@@ -66,4 +62,4 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
     )
 }
 
-export default NewProperty;
+export default EditProperty;
