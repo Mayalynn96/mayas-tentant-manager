@@ -15,7 +15,7 @@ const API = {
         return await res.json();
     },
     getPropertyById: async (propertyId, token) => {
-        const res = await fetch(`${URL_PREFIX}/api/properties/property/${propertyId}`, {
+        const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
             headers: {
                 "authorization": `Bearer ${token}`
             }

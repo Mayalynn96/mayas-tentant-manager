@@ -19,10 +19,6 @@ Property.init({
     country:{
         type: DataTypes.STRING,
         allowNull:false
-    },
-    nbrOfAp:{
-        type: DataTypes.INTEGER,
-        allowNull:false
     }
 }, {
     sequelize

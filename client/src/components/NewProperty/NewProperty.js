@@ -7,7 +7,6 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
     const [zipCodeInput, setZipCodeInput] = useState('');
     const [cityInput, setCityInput] = useState('');
     const [countryInput, setCountryInput] = useState('');
-    const [nbrOfApInput, setNbrOfAp] = useState('');
 
     const handleInputChange = (e) => {
         e.preventDefault();
@@ -19,9 +18,7 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
             setCityInput(e.target.value)
         } else if(e.target.id === "countryInput") {
             setCountryInput(e.target.value)
-        } else if(e.target.id === "nbrOfApInput") {
-            setNbrOfAp(e.target.value)
-        }
+        } 
     }
 
     const submitForm = async (e) => {
@@ -31,8 +28,7 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
             "address": addressInput,
             "zipCode": zipCodeInput,
             "city": cityInput,
-            "country": countryInput,
-            "nbrOfAp": nbrOfApInput
+            "country": countryInput
         }
 
         console.log(newPropertyObject)
@@ -46,7 +42,6 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
         setZipCodeInput('');
         setCityInput('');
         setCountryInput('');
-        setNbrOfAp('');
 
         handleClick();
     }
@@ -61,8 +56,7 @@ function NewProperty({handleClick, properties, setProperties, authState}) {
                         <input type="text" id="addressInput" placeholder='Address' value={addressInput} onChange={handleInputChange}/>
                         <input type="number" id="zipCodeInput" placeholder='Zip' value={zipCodeInput} onChange={handleInputChange}/>
                         <input type="text" id="cityInput" placeholder='City' value={cityInput} onChange={handleInputChange}/>
-                        <input type="text" id="countryInput" placeholder='Country' value={countryInput} onChange={handleInputChange}/>
-                        <input type="number" id="nbrOfApInput" placeholder='Number of units' value={nbrOfApInput} onChange={handleInputChange}/>   
+                        <input type="text" id="countryInput" placeholder='Country' value={countryInput} onChange={handleInputChange}/> 
                     </div>
                     <div>
                         <button>Save</button>
