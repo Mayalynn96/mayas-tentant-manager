@@ -4,7 +4,15 @@ const sequelize = require('../config/connection');
 class Tenant extends Model{};
 
 Tenant.init({
-    fullName:{
+    honorific:{
+        type: DataTypes.STRING,
+        allowNull:true
+    },
+    firstName:{
+        type: DataTypes.STRING,
+        allowNull:false
+    },
+    lastName:{
         type: DataTypes.STRING,
         allowNull:false
     },
@@ -15,6 +23,10 @@ Tenant.init({
     moveOutDate:{
         type: DataTypes.DATEONLY,
         allowNull:true
+    },
+    nbrOfHouseholdMembers:{
+        type: DataTypes.INTEGER,
+        allowNull:false
     }
 }, {
     sequelize

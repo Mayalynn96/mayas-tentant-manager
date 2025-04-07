@@ -75,7 +75,6 @@ function Home({ authState }) {
                             <button className='propertyBtn' onClick={() => {gotToProperty(property.id)}} key={index}>
                                 <p style={{ fontWeight: 'bold' }}>{property.address}</p>
                                 <p>{property.zipCode} {property.city}</p>
-                                <p>{property.nbrOfAp} Units</p>
                             </button>
                         )
                     })}

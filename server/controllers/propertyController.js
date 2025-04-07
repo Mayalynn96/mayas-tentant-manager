@@ -82,7 +82,6 @@ router.post("/", async (req, res) => {
             city: req.body.city,
             zipCode: req.body.zipCode,
             country: req.body.country,
-            nbrOfAp: req.body.nbrOfAp,
             UserId: tokenData.id
         });
 
@@ -116,7 +115,6 @@ router.put('/:id', async (req, res) => {
             city: req.body.city,
             zipCode: req.body.zipCode,
             country: req.body.country,
-            nbrOfAp: req.body.nbrOfAp,
             UserId: tokenData.id
         });
 

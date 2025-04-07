@@ -53,9 +53,12 @@ router.post("/", async (req, res) => {
         }
 
         const newTenant = await Tenant.create({
-            fullName: req.body.fullName,
+            honorific: req.body.honorific,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             moveInDate: req.body.moveInDate,
             moveOutData: req.body.moveOutData,
+            nbrOfHouseholdMembers: req.body.nbrOfHouseholdMembers,
             UnitId: req.body.unitId,
             UserId: tokenData.id
         });
@@ -104,9 +107,12 @@ router.put('/:id', async (req, res) => {
         }
 
         const updatedTenantData = await tenantData.update({
-            fullName: req.body.fullName,
+            honorific: req.body.honorific,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             moveInDate: req.body.moveInDate,
-            moveOutDate: req.body.moveOutDate,
+            moveOutData: req.body.moveOutData,
+            nbrOfHouseholdMembers: req.body.nbrOfHouseholdMembers,
             UnitId: req.body.unitId,
             UserId: tokenData.id
         });
