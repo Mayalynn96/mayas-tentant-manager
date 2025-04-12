@@ -69,6 +69,16 @@ function PropertyId({ authState }) {
         return
     }
 
+    async function deleteUnit(unitId) {
+        const deletedUnit = await API.deleteUnit(unitId, authState.token);
+        console.log(deletedUnit)
+        
+        const leftOverUnits = units.filter(item => item.id !== unitId);
+        setUnits(leftOverUnits)
+
+        return
+    }
+
     function UnitSection() {
         if(!hasUnits){
             return (
@@ -120,8 +130,8 @@ function PropertyId({ authState }) {
                             <p className='columnB'>{unit.size} m<sup>2</sup></p>
                             <p className='columnC'>{unit.floor}</p>
                             <CurrentTenant/>
-                            <button>Edit</button>
-                            <button>Delete</button>
+                            <button>Edit</button> 
+                            <button onClick={(event) => deleteUnit(unit.id)}>Delete</button>
                             <button>Tenants</button>
                         </div>
                     )
