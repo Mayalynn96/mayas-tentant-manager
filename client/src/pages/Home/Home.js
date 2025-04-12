@@ -12,7 +12,6 @@ function Home({ authState }) {
     //Handle display for adding new property
     const handleClick = () => {
       setIsVisible(!isVisible);
-      console.log(isVisible)
     };
 
     // creating properties const

@@ -22,6 +22,38 @@ const API = {
         });
         return await res.json();
     },
+    createNewUnit: async (unitData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/units`, {
+            method: "POST",
+            body: JSON.stringify(unitData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    updateUnit: async (unitId, unitData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/untis/${unitId}`, {
+            method: "Put",
+            body: JSON.stringify(unitData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    deleteUnit: async (unitId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/units/${unitId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     createNewProperty: async (propertyData, token) => {
         const res = await fetch(`${URL_PREFIX}/api/properties`, {
             method: "POST",

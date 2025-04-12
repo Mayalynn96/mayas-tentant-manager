@@ -4,21 +4,23 @@ import { useParams, Outlet, useNavigate } from "react-router-dom";
 import './PropertyId.css';
 import Loading from "../../components/Loading/Loading";
 import EditProperty from '../../components/EditProperty/EditProperty';
+import dayjs from 'dayjs';
+import NewUnit from '../../components/NewUnit/NewUnit';
 
 function PropertyId({ authState }) {
-    //Set display for Pop Up
+    //Set display for Pop Ups
     const [popUpIsVisible, setPopUpIsVisible] = useState(false);
+    const [addUnitIsVisible, setAddUnitIsVisible] = useState(false);
 
     //Set display for updating property
     const [isVisible, setIsVisible] = useState(false);
 
-    //Handle display for adding new property
-    const handleClick = () => {
+    //Handle display for editing property
+    const handleClickEditProperty = () => {
         setIsVisible(!isVisible);
-        console.log(isVisible)
     };
     
-    //Handle display for adding new property
+    //Handle display for deletion Pop Up
     const handleDeleteBttn = () => {
         setPopUpIsVisible(!popUpIsVisible);
       };
@@ -54,10 +56,26 @@ function PropertyId({ authState }) {
         getProperty();
     }, [authState, propertyId]);
 
+    //Handle display for adding new unit
+    const handleClickNewUnit = () => {
+        setAddUnitIsVisible(!addUnitIsVisible);
+        console.log(addUnitIsVisible)
+      };
+
     const deleteProperty = async () => {
         const deletedProperty = await API.deleteProperty(propertyId, authState.token);
         console.log(deletedProperty)
         redirectTo("home")
+        return
+    }
+
+    async function deleteUnit(unitId) {
+        const deletedUnit = await API.deleteUnit(unitId, authState.token);
+        console.log(deletedUnit)
+        
+        const leftOverUnits = units.filter(item => item.id !== unitId);
+        setUnits(leftOverUnits)
+
         return
     }
 
@@ -66,7 +84,7 @@ function PropertyId({ authState }) {
             return (
                 <section>
                     <p>This property has no units yet!</p>
-                    <button>Add Unit</button>
+                    <button onClick={handleClickNewUnit}>Add Unit</button>
                 </section>
             )
         }
@@ -74,25 +92,35 @@ function PropertyId({ authState }) {
         return (
             <section>
                 <p>Here are your Units!</p>
+                <button onClick={handleClickNewUnit}>Add Unit</button>
                 <p>Total Units: {units.length}</p>
                 <div id="allUnits">
-                    <div className='eachUnit'>
-                        <p style={{"font-weight":"bold"}} className='columnA'>Unit Number</p>
-                        <p style={{"font-weight":"bold"}} className='columnB'>Unit Size</p>
-                        <p style={{"font-weight":"bold"}} className='columnC'>floor</p>
-                        <p style={{"font-weight":"bold"}} className='columnD'>Current Tenant</p>
+                    <div className='eachUnitHeader'>
+                        <p style={{"fontWeight":"bold"}} className='columnA'>Unit Number</p>
+                        <p style={{"fontWeight":"bold"}} className='columnB'>Unit Size</p>
+                        <p style={{"fontWeight":"bold"}} className='columnC'>floor</p>
+                        <p style={{"fontWeight":"bold"}} className='columnD'>Current Tenant</p>
                     </div>
                    {units.map(unit => {
                     
-                    function CurrentUser() {
-                        if (unit.Tenants.length === 0) {
+                    function CurrentTenant() {
+                        if (!unit.Tenants || unit.Tenants.length === 0) {
                             return (
-                                <p className='columnD'>No current tenant</p>
+                                <p className='columnD'>No tenants yet</p>
                             )
                         } else {
-                            return (
-                                <p className='columnD'>{unit.Tenants[0].firstName} {unit.Tenants[0].lastName} household of {unit.Tenants[0].nbrOfHouseholdMembers} since {unit.Tenants[0].moveInDate}</p>
-                            )
+                            for (let i = 0; i < unit.Tenants.length; i++){
+                                if(dayjs().isAfter(unit.Tenants[i].moveInDate) && (!unit.Tenants[i].moveOutDate || dayjs().isBefore(unit.Tenants[i].moveOutDate))) {
+                                    return (
+                                        <p className='columnD'>{unit.Tenants[i].firstName} {unit.Tenants[i].lastName} household of {unit.Tenants[i].nbrOfHouseholdMembers} since {unit.Tenants[i].moveInDate}</p>
+                                    )
+                                } else {
+                                    return (
+                                        <p className='columnD'>No tenant currently living in this Unit</p>
+                                    )
+                                }
+                            }
+                            
                         }
                     }
                     
@@ -101,7 +129,10 @@ function PropertyId({ authState }) {
                             <p className='columnA'>{unit.unitNbr}</p>
                             <p className='columnB'>{unit.size} m<sup>2</sup></p>
                             <p className='columnC'>{unit.floor}</p>
-                            <CurrentUser/>
+                            <CurrentTenant/>
+                            <button>Edit</button> 
+                            <button onClick={(event) => deleteUnit(unit.id)}>Delete</button>
+                            <button>Tenants</button>
                         </div>
                     )
                    })} 
@@ -113,7 +144,8 @@ function PropertyId({ authState }) {
     if (property.address) {
         return (
             <main id='property'>
-                {isVisible && <EditProperty handleClick={handleClick} property={property} setProperty={setProperty} authState={authState}/>}
+                {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={property.id}/>}
+                {isVisible && <EditProperty handleClickEditProperty={handleClickEditProperty} property={property} setProperty={setProperty} authState={authState}/>}
                 {popUpIsVisible && 
                 <div id="deletePopUp" className="fade-in" >
                     <div className='moveToFront'>
@@ -129,7 +161,7 @@ function PropertyId({ authState }) {
                 <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
                 <div id='bannerBtns'>
                 <button onClick={() => {redirectTo("home")}}>Home</button>
-                <button onClick={handleClick}>Edit</button>
+                <button onClick={handleClickEditProperty}>Edit</button>
                 <button onClick={handleDeleteBttn}>Delete</button>
                 </div>
                 </section>

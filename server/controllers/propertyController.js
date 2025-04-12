@@ -49,7 +49,7 @@ router.get("/:propertyId", async (req, res) => {
 
         const propertyData = await Property.findByPk(req.params.propertyId, {
             include: [{model: Unit, 
-                include: [{model: Tenant, where: {moveOutDate : null}, required: false}]
+                include: [{model: Tenant}]
             }]
         })
 
