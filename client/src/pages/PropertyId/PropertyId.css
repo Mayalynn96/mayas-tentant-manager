@@ -52,20 +52,27 @@
 #allUnits {
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
 }
 
-.eachUnit {
+.eachUnit, .eachUnitHeader {
     display: flex;
-    border: 1px;
 }
 
-.eachUnit p {
-    border: 1px solid white;
+.eachUnit:hover{
+    background-color: rgb(99, 97, 138);;
+}
+
+.eachUnit p, .eachUnitHeader p {
     margin: 0;
     padding: 1px 10px;
     align-content: end;
     height: 30px;
     font-size: 20px;
+}
+
+.eachUnit p{
+    cursor: pointer;
 }
 
 .columnA, .columnB {

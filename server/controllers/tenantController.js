@@ -57,7 +57,7 @@ router.post("/", async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             moveInDate: req.body.moveInDate,
-            moveOutData: req.body.moveOutData,
+            moveOutDate: req.body.moveOutDate,
             nbrOfHouseholdMembers: req.body.nbrOfHouseholdMembers,
             UnitId: req.body.unitId,
             UserId: tokenData.id
@@ -111,7 +111,7 @@ router.put('/:id', async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             moveInDate: req.body.moveInDate,
-            moveOutData: req.body.moveOutData,
+            moveOutDate: req.body.moveOutDate,
             nbrOfHouseholdMembers: req.body.nbrOfHouseholdMembers,
             UnitId: req.body.unitId,
             UserId: tokenData.id
