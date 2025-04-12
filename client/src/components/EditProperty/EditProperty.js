@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './EditProperty.css';
 import API from '../../utils/API';
 
-function EditProperty({handleClick, property, setProperty, authState}) {
+function EditProperty({handleClickEditProperty, property, setProperty, authState}) {
     const [addressInput, setAddressInput] = useState(property.address);
     const [zipCodeInput, setZipCodeInput] = useState(property.zipCode);
     const [cityInput, setCityInput] = useState(property.city);
@@ -35,7 +35,7 @@ function EditProperty({handleClick, property, setProperty, authState}) {
 
         setProperty(updatedProperty.data);
 
-        handleClick();
+        handleClickEditProperty();
     }
 
     return (
@@ -55,7 +55,7 @@ function EditProperty({handleClick, property, setProperty, authState}) {
                     </div>
                 </form>
                 <div>
-                <button onClick={() => {handleClick()}}>Close</button>
+                <button onClick={() => {handleClickEditProperty()}}>Close</button>
                 </div>
             </div>
         </div>
