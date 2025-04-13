@@ -34,7 +34,7 @@ const API = {
         return await res.json();
     },
     updateUnit: async (unitId, unitData, token) => {
-        const res = await fetch(`${URL_PREFIX}/api/untis/${unitId}`, {
+        const res = await fetch(`${URL_PREFIX}/api/units/${unitId}`, {
             method: "Put",
             body: JSON.stringify(unitData),
             headers: {
