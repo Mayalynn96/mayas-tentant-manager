@@ -8,10 +8,6 @@
     color: white;
 }
 
-#unitTenantTitle{
-    width: 33%;
-}
-
 #unitTenants {
     justify-content: flex-start;
     align-content: center;
@@ -19,4 +15,8 @@
 
 body {
     background-color: #282c34;
+}
+
+#unitHeaderBanner {
+    width: 70%;
 }

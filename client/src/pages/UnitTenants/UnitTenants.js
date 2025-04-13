@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from "../../utils/API";
-import { useParams, Outlet, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import './UnitTenants.css';
 import Loading from '../../components/Loading/Loading';
 
@@ -9,6 +9,7 @@ function UnitTenants({ authState }) {
     const [property, setProperty] = useState([]);
     const { propertyId } = useParams();
     const [unit, setUnit] = useState([]);
+    const [tenants, setTenants] = useState([]);
     const { unitId } = useParams();
 
     // Adding useNavigate to navigate 
@@ -40,6 +41,9 @@ function UnitTenants({ authState }) {
             if (authState.isLoggedIn) {
                 const userUnit = await API.getUnitById(unitId, authState.token)
                 setUnit(userUnit.unitData);
+                if(userUnit.Tenants){
+                    setTenants(userUnit.Tenants)
+                }
                 return
             } 
         };
@@ -47,6 +51,18 @@ function UnitTenants({ authState }) {
         getProperty();
         getUnit();
     }, [authState, propertyId, unitId]);
+
+    function AllTenants(){
+        if (tenants.length === 0) {
+            return (
+            <h3>No tenants in this unit yet</h3>
+            )
+        } else {
+            return (
+            <h3>This unit has {tenants.length} Tenants</h3>
+            )
+        }
+    }
 
     if (authState.isLoading) {
         return (
@@ -70,13 +86,19 @@ function UnitTenants({ authState }) {
         return (
             <main id='unitTenants'>
                 <header id='UnitHeader'>
+                    <div id="unitHeaderBanner">
                     <h3>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
-                    <h2 id='unitTenantTitle'>Tenants in Unit {unit.unitNbr} Floor {unit.floor}</h2>
+                    <h2 id='unitTenantTitle'>Unit {unit.unitNbr} Floor {unit.floor}</h2>
+                    </div>
                     <div id='bannerBtns'>
                     <button onClick={() => {gotToProperty(property.id)}}>Back to Property</button>
                     <button onClick={() => {redirectTo("home")}}>Home</button>
                     </div>
                 </header>
+                <section>
+                    <AllTenants />
+                    <button>Add Tenant</button>
+                </section>
             </main>
         )
     } else {
