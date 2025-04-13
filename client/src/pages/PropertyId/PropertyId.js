@@ -6,23 +6,41 @@ import Loading from "../../components/Loading/Loading";
 import EditProperty from '../../components/EditProperty/EditProperty';
 import dayjs from 'dayjs';
 import NewUnit from '../../components/NewUnit/NewUnit';
+import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
+import EditUnit from '../../components/EditUnit/EditUnit';
 
 function PropertyId({ authState }) {
     //Set display for Pop Ups
-    const [popUpIsVisible, setPopUpIsVisible] = useState(false);
+    const [popUpUnitIsVisible, setPopUpUnitIsVisible] = useState(false);
+    const [unitToBeDeleted, setUnitToBeDeleted] = useState(null);
+    const [unitToBeUpdated, setUnitToBeUpdated] = useState(null);
+    const [popUpPropertyIsVisible, setPopUpPropertyIsVisible] = useState(false);
     const [addUnitIsVisible, setAddUnitIsVisible] = useState(false);
 
     //Set display for updating property
     const [isVisible, setIsVisible] = useState(false);
+    //Set display for updating unit
+    const [isVisibleUnit, setIsVisibleUnit] = useState(false);
 
     //Handle display for editing property
     const handleClickEditProperty = () => {
         setIsVisible(!isVisible);
     };
+
+    //Handle display for editing unit
+    const handleClickEditUnit = (unit) => {
+        if(unitToBeUpdated === null){
+            setUnitToBeUpdated(unit)
+        } else {
+            setUnitToBeUpdated(null)
+        }
+
+        setIsVisibleUnit(!isVisibleUnit);
+    };
     
     //Handle display for deletion Pop Up
     const handleDeleteBttn = () => {
-        setPopUpIsVisible(!popUpIsVisible);
+        setPopUpPropertyIsVisible(!popUpPropertyIsVisible);
       };
 
     //Setting Property Data and Unit Data
@@ -60,21 +78,35 @@ function PropertyId({ authState }) {
     const handleClickNewUnit = () => {
         setAddUnitIsVisible(!addUnitIsVisible);
         console.log(addUnitIsVisible)
-      };
+    };
+
+    //Handle display for Deleting unit
+    const handleUnitPopUp = (unitId) => {
+        
+        if(unitToBeDeleted === Number){
+            setUnitToBeDeleted(null)
+        } else {
+            setUnitToBeDeleted(unitId)
+        }
+
+        setPopUpUnitIsVisible(!popUpUnitIsVisible);
+    };
 
     const deleteProperty = async () => {
         const deletedProperty = await API.deleteProperty(propertyId, authState.token);
-        console.log(deletedProperty)
-        redirectTo("home")
+        console.log(deletedProperty);
+        redirectTo("home");
         return
-    }
+    };
 
-    async function deleteUnit(unitId) {
-        const deletedUnit = await API.deleteUnit(unitId, authState.token);
-        console.log(deletedUnit)
+    const deleteUnit = async () => {
+        const deletedUnit = await API.deleteUnit(unitToBeDeleted, authState.token);
+        console.log(deletedUnit);
         
-        const leftOverUnits = units.filter(item => item.id !== unitId);
-        setUnits(leftOverUnits)
+        const leftOverUnits = units.filter(item => item.id !== unitToBeDeleted);
+        setUnits(leftOverUnits);
+        setPopUpUnitIsVisible(!popUpUnitIsVisible);
+        setUnitToBeDeleted(null);
 
         return
     }
@@ -130,8 +162,8 @@ function PropertyId({ authState }) {
                             <p className='columnB'>{unit.size} m<sup>2</sup></p>
                             <p className='columnC'>{unit.floor}</p>
                             <CurrentTenant/>
-                            <button>Edit</button> 
-                            <button onClick={(event) => deleteUnit(unit.id)}>Delete</button>
+                            <button onClick={() => handleClickEditUnit(unit)}>Edit</button> 
+                            <button onClick={() => handleUnitPopUp(unit.id)}>Delete</button>
                             <button>Tenants</button>
                         </div>
                     )
@@ -144,9 +176,11 @@ function PropertyId({ authState }) {
     if (property.address) {
         return (
             <main id='property'>
+                {isVisibleUnit && <EditUnit handleClickEditUnit={handleClickEditUnit} currentUnit={unitToBeUpdated} units={units} setUnits={setUnits} authState={authState} propertyId={propertyId} />}
+                {popUpUnitIsVisible && <MsgPopUp message={"Are you sure you want to delete this unit? All tenants will be delted as well."} buttonMsg={"Yes, Delete"} handleSubmit={deleteUnit} handleClose={handleUnitPopUp}/>}
                 {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={property.id}/>}
                 {isVisible && <EditProperty handleClickEditProperty={handleClickEditProperty} property={property} setProperty={setProperty} authState={authState}/>}
-                {popUpIsVisible && 
+                {popUpPropertyIsVisible && 
                 <div id="deletePopUp" className="fade-in" >
                     <div className='moveToFront'>
                         <h2>Are you sure you want to delete this property?</h2>
