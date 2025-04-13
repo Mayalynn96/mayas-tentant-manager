@@ -58,10 +58,12 @@ function PropertyId({ authState }) {
     }
 
     useEffect(() => {
+        
         // get Property if user is logged in
         const getProperty = async () => {
             if (authState.isLoggedIn) {
                 const userProperty = await API.getPropertyById(propertyId, authState.token)
+                console.log(userProperty)
                 setProperty(userProperty);
                 setUnits(userProperty.Units)
                 if(userProperty.Units[0]){
@@ -109,6 +111,11 @@ function PropertyId({ authState }) {
         setUnitToBeDeleted(null);
 
         return
+    }
+
+    // redirecting to UnitTenants
+    const gotToUnit = (id) => {
+        navigate(`/property/${property.id}/unit/${id}`)
     }
 
     function UnitSection() {
@@ -164,7 +171,7 @@ function PropertyId({ authState }) {
                             <CurrentTenant/>
                             <button onClick={() => handleClickEditUnit(unit)}>Edit</button> 
                             <button onClick={() => handleUnitPopUp(unit.id)}>Delete</button>
-                            <button>Tenants</button>
+                            <button onClick={() => gotToUnit(unit.id)}>Tenants</button>
                         </div>
                     )
                    })} 
@@ -173,46 +180,71 @@ function PropertyId({ authState }) {
         )
     }
 
-    if (property.address) {
-        return (
-            <main id='property'>
-                {isVisibleUnit && <EditUnit handleClickEditUnit={handleClickEditUnit} currentUnit={unitToBeUpdated} units={units} setUnits={setUnits} authState={authState} propertyId={propertyId} />}
-                {popUpUnitIsVisible && <MsgPopUp message={"Are you sure you want to delete this unit? All tenants will be delted as well."} buttonMsg={"Yes, Delete"} handleSubmit={deleteUnit} handleClose={handleUnitPopUp}/>}
-                {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={property.id}/>}
-                {isVisible && <EditProperty handleClickEditProperty={handleClickEditProperty} property={property} setProperty={setProperty} authState={authState}/>}
-                {popUpPropertyIsVisible && 
-                <div id="deletePopUp" className="fade-in" >
-                    <div className='moveToFront'>
-                        <h2>Are you sure you want to delete this property?</h2>
-                        <p>This action is not reversible and all units, tenants and bills will be deleted as well.</p>
+    function MainPage() {
+        if (property.address) {
+            return (
+                <main id='property'>
+                    {isVisibleUnit && <EditUnit handleClickEditUnit={handleClickEditUnit} currentUnit={unitToBeUpdated} units={units} setUnits={setUnits} authState={authState} propertyId={propertyId} />}
+                    {popUpUnitIsVisible && <MsgPopUp message={"Are you sure you want to delete this unit? All tenants will be delted as well."} buttonMsg={"Yes, Delete"} handleSubmit={deleteUnit} handleClose={handleUnitPopUp}/>}
+                    {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={property.id}/>}
+                    {isVisible && <EditProperty handleClickEditProperty={handleClickEditProperty} property={property} setProperty={setProperty} authState={authState}/>}
+                    {popUpPropertyIsVisible && 
+                    <div id="deletePopUp" className="fade-in" >
+                        <div className='moveToFront'>
+                            <h2>Are you sure you want to delete this property?</h2>
+                            <p>This action is not reversible and all units, tenants and bills will be deleted as well.</p>
+                        </div>
+                        <div className='moveToFront'>
+                            <button onClick={deleteProperty} className='deleteBtnGeneral'>Yes, Delete</button>
+                            <button onClick={handleDeleteBttn}>Cancel</button>
+                        </div>
+                    </div>}
+                    <section id='propertyBanner'>
+                    <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
+                    <div id='bannerBtns'>
+                    <button onClick={() => {redirectTo("home")}}>Home</button>
+                    <button onClick={handleClickEditProperty}>Edit</button>
+                    <button onClick={handleDeleteBttn}>Delete</button>
                     </div>
-                    <div className='moveToFront'>
-                        <button onClick={deleteProperty} className='deleteBtnGeneral'>Yes, Delete</button>
-                        <button onClick={handleDeleteBttn}>Cancel</button>
-                    </div>
-                </div>}
-                <section id='propertyBanner'>
-                <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
-                <div id='bannerBtns'>
-                <button onClick={() => {redirectTo("home")}}>Home</button>
-                <button onClick={handleClickEditProperty}>Edit</button>
-                <button onClick={handleDeleteBttn}>Delete</button>
-                </div>
-                </section>
-                <UnitSection/>
-                <Outlet context={[property]} />
-            </main>
-        )
-    } else if(property.msg){
+                    </section>
+                    <UnitSection/>
+                    <Outlet context={[property]} />
+                </main>
+            )
+        } else if(property.msg){
+            return (
+                <main>
+                    <p>{property.msg}</p>
+                </main>
+            )
+        } else {
+            return (
+                <main>
+                    <Loading />
+                </main>
+            )
+        }
+    }
+
+    if (authState.isLoading) {
         return (
             <main>
-                <p>{property.msg}</p>
+                <Loading />
             </main>
+        )
+    } else if (authState.isLoggedIn) {
+        return (
+            <MainPage />
         )
     } else {
         return (
             <main>
-                <Loading />
+                <h1>Welcome to our site!</h1>
+                <p>It seems you are not logged in.</p>
+                <div>
+                    <button onClick={() => {redirectTo("login")}}>login</button>
+                    <button onClick={() => {redirectTo("signUp")}}>Sign Up</button>
+                </div>
             </main>
         )
     }

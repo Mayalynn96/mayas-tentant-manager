@@ -4,7 +4,8 @@ const router = express.Router();
 
 const {
     Unit,
-    Property
+    Property,
+    Tenant
 } = require('../models');
 
 // Get all Unites route
@@ -18,6 +19,33 @@ router.get('/', (req, res) => {
             err: err
         });
     });
+});
+
+// Get Unit by Id
+router.get('/:id', async (req, res) => {
+    const token = req.headers?.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(403).json({ msg: "you must be logged in to edit a Property" });
+    }
+    try {  
+        const tokenData = jwt.verify(token, process.env.JWT_SECRET);
+
+        const unitData = await Unit.findByPk(req.params.id, {
+            include: [{model: Tenant}]
+        })
+
+        if(!unitData){
+            return res.status(404).json({ msg: "No unit under this Id." });
+        }
+
+        if(tokenData.id !== unitData.UserId){
+            return res.status(403).json({ msg: "This unit doesn't belong to you." });
+        }
+
+        res.status(201).json({unitData});
+    } catch (err) {
+        res.status(500).json({ msg: "Error updating Unit.", error: err.message });
+    }
 });
 
 // Adding new Unit to Property

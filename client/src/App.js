@@ -6,6 +6,7 @@ import Login from "./pages/Login/Login";
 import './App.css';
 import SignUp from "./pages/SignUp/SignUp";
 import PropertyId from "./pages/PropertyId/PropertyId";
+import UnitTenants from "./pages/UnitTenants/UnitTenants";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -59,6 +60,7 @@ function App() {
       <Route path="login" element={<Login setAuthState={setAuthState} />} />
       <Route path="signUp" element={<SignUp setAuthState={setAuthState} />} />
       <Route path="property/:propertyId" element={<PropertyId authState={authState} />} />
+      <Route path="property/:propertyId/unit/:unitId" element={<UnitTenants authState={authState} />} />
       </Routes>
     </Router>
   );

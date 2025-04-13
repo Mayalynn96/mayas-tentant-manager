@@ -6,6 +6,7 @@ import Loading from "../../components/Loading/Loading";
 import NewProperty from '../../components/NewProperty/NewProperty';
 
 function Home({ authState }) {
+    localStorage.removeItem("CurrentProperty")
     //Set display for adding new property
     const [isVisible, setIsVisible] = useState(false);
     

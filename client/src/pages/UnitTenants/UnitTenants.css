@@ -1,0 +1,22 @@
+#UnitHeader {
+    background-color: rgb(73, 71, 117);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: auto;
+    align-items: center;
+    color: white;
+}
+
+#unitTenantTitle{
+    width: 33%;
+}
+
+#unitTenants {
+    justify-content: flex-start;
+    align-content: center;
+}
+
+body {
+    background-color: #282c34;
+}
