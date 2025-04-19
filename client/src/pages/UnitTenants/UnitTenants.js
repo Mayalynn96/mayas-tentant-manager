@@ -3,8 +3,16 @@ import API from "../../utils/API";
 import { useParams, useNavigate } from "react-router-dom";
 import './UnitTenants.css';
 import Loading from '../../components/Loading/Loading';
+import NewTenant from '../../components/NewTenant/NewTenant';
 
 function UnitTenants({ authState }) {
+    //Setting Pop Up Visibility
+    const [addTenantIsVisible, setAddTenantIsVisible] = useState(false);
+    //Handle display for New Tenant
+    const handleClickNewTenant = () => {
+    setAddTenantIsVisible(!addTenantIsVisible);
+    };
+
     //Setting Property Data and Unit Data
     const [property, setProperty] = useState([]);
     const { propertyId } = useParams();
@@ -41,8 +49,8 @@ function UnitTenants({ authState }) {
             if (authState.isLoggedIn) {
                 const userUnit = await API.getUnitById(unitId, authState.token)
                 setUnit(userUnit.unitData);
-                if(userUnit.Tenants){
-                    setTenants(userUnit.Tenants)
+                if(userUnit.unitData.Tenants){
+                    setTenants(userUnit.unitData.Tenants)
                 }
                 return
             } 
@@ -53,13 +61,25 @@ function UnitTenants({ authState }) {
     }, [authState, propertyId, unitId]);
 
     function AllTenants(){
+        console.log(tenants)
         if (tenants.length === 0) {
             return (
             <h3>No tenants in this unit yet</h3>
             )
         } else {
             return (
+            <section>
             <h3>This unit has {tenants.length} Tenants</h3>
+            <div>
+            {tenants.map(tenant => {
+               return (
+                <div key={tenant.id}>
+                    <p>{tenant.firstName}</p>
+                </div>
+               ) 
+            })}
+            </div>
+            </section>
             )
         }
     }
@@ -97,7 +117,8 @@ function UnitTenants({ authState }) {
                 </header>
                 <section>
                     <AllTenants />
-                    <button>Add Tenant</button>
+                    <button onClick={handleClickNewTenant}>Add Tenant</button>
+                    {addTenantIsVisible && <NewTenant handleClickNewTenant={handleClickNewTenant} tenants={tenants} setTenants={setTenants} unitId={unitId} authState={authState}/>}
                 </section>
             </main>
         )

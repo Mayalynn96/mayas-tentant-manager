@@ -94,6 +94,17 @@ const API = {
         });
         return await res.json();
     },
+    createNewTenant: async (tenantData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/tenants`, {
+            method: "POST",
+            body: JSON.stringify(tenantData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     isValidToken: async token => {
         const res = await fetch(`${URL_PREFIX}/api/users/isValidToken`, {
             headers: {
