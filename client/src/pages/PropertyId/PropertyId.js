@@ -63,7 +63,6 @@ function PropertyId({ authState }) {
         const getProperty = async () => {
             if (authState.isLoggedIn) {
                 const userProperty = await API.getPropertyById(propertyId, authState.token)
-                console.log(userProperty)
                 setProperty(userProperty);
                 setUnits(userProperty.Units)
                 if(userProperty.Units[0]){
@@ -79,7 +78,6 @@ function PropertyId({ authState }) {
     //Handle display for adding new unit
     const handleClickNewUnit = () => {
         setAddUnitIsVisible(!addUnitIsVisible);
-        console.log(addUnitIsVisible)
     };
 
     //Handle display for Deleting unit
@@ -143,6 +141,7 @@ function PropertyId({ authState }) {
                    {units.map(unit => {
                     
                     function CurrentTenant() {
+                        const currentTennant = []
                         if (!unit.Tenants || unit.Tenants.length === 0) {
                             return (
                                 <p className='columnD'>No tenants yet</p>
@@ -150,14 +149,17 @@ function PropertyId({ authState }) {
                         } else {
                             for (let i = 0; i < unit.Tenants.length; i++){
                                 if(dayjs().isAfter(unit.Tenants[i].moveInDate) && (!unit.Tenants[i].moveOutDate || dayjs().isBefore(unit.Tenants[i].moveOutDate))) {
-                                    return (
-                                        <p className='columnD'>{unit.Tenants[i].firstName} {unit.Tenants[i].lastName} household of {unit.Tenants[i].nbrOfHouseholdMembers} since {unit.Tenants[i].moveInDate}</p>
-                                    )
-                                } else {
-                                    return (
-                                        <p className='columnD'>No tenant currently living in this Unit</p>
-                                    )
-                                }
+                                    currentTennant.push(unit.Tenants[i])
+                                } 
+                            }
+                            if(currentTennant.length === 0){
+                                return (
+                                    <p className='columnD'>No tenant currently living in this Unit</p>
+                                )
+                            } else {
+                                return (
+                                    <p className='columnD'>{currentTennant[0].firstName} {currentTennant[0].lastName} household of {currentTennant[0].nbrOfHouseholdMembers} since {currentTennant[0].moveInDate}</p>
+                                )
                             }
                             
                         }
