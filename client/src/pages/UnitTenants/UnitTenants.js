@@ -64,17 +64,36 @@ function UnitTenants({ authState }) {
         console.log(tenants)
         if (tenants.length === 0) {
             return (
-            <h3>No tenants in this unit yet</h3>
+            <div>
+                <h3>No tenants in this unit yet</h3>
+                <button onClick={handleClickNewTenant}>Add Tenant</button>
+            </div>
             )
         } else {
             return (
             <section>
             <h3>This unit has {tenants.length} Tenants</h3>
-            <div>
+            <button onClick={handleClickNewTenant}>Add Tenant</button>
+            <div id='allTenantsDiv'>
+                <div id='allTenantsTitles'>
+                    <p className='columnAT'>Honorific</p>
+                    <p className='columnBT'>First Name</p>
+                    <p className='columnCT'>Last Name</p>
+                    <p className='columnDT'>Nbr</p>
+                    <p className='columnET'>Move In Date</p>
+                    <p className='columnFT'>Move Out Date</p>
+                </div>
             {tenants.map(tenant => {
                return (
-                <div key={tenant.id}>
-                    <p>{tenant.firstName}</p>
+                <div className='tenantDiv' key={tenant.id}>
+                    <p className='columnAT'>{tenant.honorific}</p>
+                    <p className='columnBT'>{tenant.firstName}</p>
+                    <p className='columnCT'>{tenant.lastName}</p>
+                    <p className='columnDT'>{tenant.nbrOfHouseholdMembers}</p>
+                    <p className='columnET'>{tenant.moveInDate}</p>
+                    <p className='columnFT'>{tenant.moveOutDate}</p>
+                    <button>Edit</button>
+                    <button>Delete</button>
                 </div>
                ) 
             })}
@@ -117,7 +136,6 @@ function UnitTenants({ authState }) {
                 </header>
                 <section>
                     <AllTenants />
-                    <button onClick={handleClickNewTenant}>Add Tenant</button>
                     {addTenantIsVisible && <NewTenant handleClickNewTenant={handleClickNewTenant} tenants={tenants} setTenants={setTenants} unitId={unitId} authState={authState}/>}
                 </section>
             </main>
