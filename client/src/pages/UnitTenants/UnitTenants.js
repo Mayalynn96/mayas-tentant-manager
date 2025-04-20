@@ -6,6 +6,7 @@ import Loading from '../../components/Loading/Loading';
 import NewTenant from '../../components/NewTenant/NewTenant';
 import EditTenant from '../../components/EditTenant/EditTenant';
 import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
+import BannerButtons from '../../components/BannerButtons/BannerButtons';
 
 function UnitTenants({ authState }) {
     //Setting Pop Up Visibility
@@ -180,6 +181,7 @@ function UnitTenants({ authState }) {
                     <button onClick={() => {redirectTo("home")}}>Home</button>
                     </div>
                 </header>
+                <BannerButtons/>
                 <section>
                     <AllTenants />
                     {popUpTenantIsVisible && <MsgPopUp message={"Are You sure you want to delete this Tenant?"} buttonMsg={"Yes, Delete"} handleSubmit={deleteTenant} handleClose={handleTenantPopUp}/>}
