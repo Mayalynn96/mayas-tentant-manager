@@ -5,12 +5,15 @@ import './UnitTenants.css';
 import Loading from '../../components/Loading/Loading';
 import NewTenant from '../../components/NewTenant/NewTenant';
 import EditTenant from '../../components/EditTenant/EditTenant';
+import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
 
 function UnitTenants({ authState }) {
     //Setting Pop Up Visibility
     const [addTenantIsVisible, setAddTenantIsVisible] = useState(false);
     const [editTenantIsVisible, setEditTenantIsVisible] = useState(false);
     const [tenantToEdit, setTenantToEdit] = useState('');
+    const [tenantToBeDeleted, setTenantToBeDeleted] = useState('');
+    const [popUpTenantIsVisible, setPopUpTenantIsVisible] = useState('');
 
     //Handle display for New Tenant
     const handleClickNewTenant = () => {
@@ -27,6 +30,35 @@ function UnitTenants({ authState }) {
 
         setEditTenantIsVisible(!editTenantIsVisible);
     };
+
+    //Handle display for Deleting Tenant
+    const handleTenantPopUp = (tenantId) => {
+        
+        if(tenantToBeDeleted === Number){
+            setTenantToBeDeleted('')
+        } else {
+            setTenantToBeDeleted(tenantId)
+        }
+
+        setPopUpTenantIsVisible(!popUpTenantIsVisible);
+    };
+
+    //Delete Tenant
+    const deleteTenant = async () => {
+        const deletedTenant = await API.deleteTenant(tenantToBeDeleted, authState.token);
+        console.log(tenantToBeDeleted)
+        console.log(deletedTenant)
+        if(deletedTenant.error){
+            console.log(deletedTenant.error);
+        }
+        
+        const leftOverTenants = tenants.filter(item => item.id !== tenantToBeDeleted);
+        setTenants(leftOverTenants);
+        setPopUpTenantIsVisible(!popUpTenantIsVisible);
+        setTenantToBeDeleted('');
+
+        return
+    }
 
     //Setting Property Data and Unit Data
     const [property, setProperty] = useState([]);
@@ -107,7 +139,7 @@ function UnitTenants({ authState }) {
                     <p className='columnET'>{tenant.moveInDate}</p>
                     <p className='columnFT'>{tenant.moveOutDate}</p>
                     <button onClick={() => handleClickEditTenant(tenant)}>Edit</button>
-                    <button>Delete</button>
+                    <button onClick={() => handleTenantPopUp(tenant.id)}>Delete</button>
                 </div>
                ) 
             })}
@@ -150,6 +182,7 @@ function UnitTenants({ authState }) {
                 </header>
                 <section>
                     <AllTenants />
+                    {popUpTenantIsVisible && <MsgPopUp message={"Are You sure you want to delete this Tenant?"} buttonMsg={"Yes, Delete"} handleSubmit={deleteTenant} handleClose={handleTenantPopUp}/>}
                     {editTenantIsVisible && <EditTenant handleClickEditTenant={handleClickEditTenant} tenants={tenants} setTenants={setTenants} authState={authState} tenantToEdit={tenantToEdit} unitId={unitId}/>}
                     {addTenantIsVisible && <NewTenant handleClickNewTenant={handleClickNewTenant} tenants={tenants} setTenants={setTenants} unitId={unitId} authState={authState}/>}
                 </section>

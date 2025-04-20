@@ -107,8 +107,18 @@ const API = {
     },
     updateTenant: async (tenantId, tenantData, token) => {
         const res = await fetch(`${URL_PREFIX}/api/tenants/${tenantId}`, {
-            method: "Put",
+            method: "PUT",
             body: JSON.stringify(tenantData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    deleteTenant: async (tenantId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/tenants/${tenantId}`, {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${token}`
