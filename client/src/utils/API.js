@@ -75,7 +75,7 @@ const API = {
     },
     updateProperty: async (propertyId, propertyData, token) => {
         const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
-            method: "Put",
+            method: "PUT",
             body: JSON.stringify(propertyData),
             headers: {
                 "Content-Type": "application/json",
@@ -98,6 +98,27 @@ const API = {
         const res = await fetch(`${URL_PREFIX}/api/tenants`, {
             method: "POST",
             body: JSON.stringify(tenantData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    updateTenant: async (tenantId, tenantData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/tenants/${tenantId}`, {
+            method: "PUT",
+            body: JSON.stringify(tenantData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    deleteTenant: async (tenantId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/tenants/${tenantId}`, {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "authorization": `Bearer ${token}`

@@ -4,14 +4,61 @@ import { useParams, useNavigate } from "react-router-dom";
 import './UnitTenants.css';
 import Loading from '../../components/Loading/Loading';
 import NewTenant from '../../components/NewTenant/NewTenant';
+import EditTenant from '../../components/EditTenant/EditTenant';
+import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
 
 function UnitTenants({ authState }) {
     //Setting Pop Up Visibility
     const [addTenantIsVisible, setAddTenantIsVisible] = useState(false);
+    const [editTenantIsVisible, setEditTenantIsVisible] = useState(false);
+    const [tenantToEdit, setTenantToEdit] = useState('');
+    const [tenantToBeDeleted, setTenantToBeDeleted] = useState('');
+    const [popUpTenantIsVisible, setPopUpTenantIsVisible] = useState('');
+
     //Handle display for New Tenant
     const handleClickNewTenant = () => {
     setAddTenantIsVisible(!addTenantIsVisible);
     };
+
+    //Handle display for Edit Tenant
+    const handleClickEditTenant = (tenant) => {
+        if(tenantToEdit === ''){
+            setTenantToEdit(tenant)
+        } else {
+            setTenantToEdit('')
+        }
+
+        setEditTenantIsVisible(!editTenantIsVisible);
+    };
+
+    //Handle display for Deleting Tenant
+    const handleTenantPopUp = (tenantId) => {
+        
+        if(tenantToBeDeleted === Number){
+            setTenantToBeDeleted('')
+        } else {
+            setTenantToBeDeleted(tenantId)
+        }
+
+        setPopUpTenantIsVisible(!popUpTenantIsVisible);
+    };
+
+    //Delete Tenant
+    const deleteTenant = async () => {
+        const deletedTenant = await API.deleteTenant(tenantToBeDeleted, authState.token);
+        console.log(tenantToBeDeleted)
+        console.log(deletedTenant)
+        if(deletedTenant.error){
+            console.log(deletedTenant.error);
+        }
+        
+        const leftOverTenants = tenants.filter(item => item.id !== tenantToBeDeleted);
+        setTenants(leftOverTenants);
+        setPopUpTenantIsVisible(!popUpTenantIsVisible);
+        setTenantToBeDeleted('');
+
+        return
+    }
 
     //Setting Property Data and Unit Data
     const [property, setProperty] = useState([]);
@@ -61,20 +108,38 @@ function UnitTenants({ authState }) {
     }, [authState, propertyId, unitId]);
 
     function AllTenants(){
-        console.log(tenants)
         if (tenants.length === 0) {
             return (
-            <h3>No tenants in this unit yet</h3>
+            <div>
+                <h3>No tenants in this unit yet</h3>
+                <button onClick={handleClickNewTenant}>Add Tenant</button>
+            </div>
             )
         } else {
             return (
             <section>
             <h3>This unit has {tenants.length} Tenants</h3>
-            <div>
+            <button onClick={handleClickNewTenant}>Add Tenant</button>
+            <div id='allTenantsDiv'>
+                <div id='allTenantsTitles'>
+                    <p className='columnAT'>Honorific</p>
+                    <p className='columnBT'>First Name</p>
+                    <p className='columnCT'>Last Name</p>
+                    <p className='columnDT'>Nbr</p>
+                    <p className='columnET'>Move In Date</p>
+                    <p className='columnFT'>Move Out Date</p>
+                </div>
             {tenants.map(tenant => {
                return (
-                <div key={tenant.id}>
-                    <p>{tenant.firstName}</p>
+                <div className='tenantDiv' key={tenant.id}>
+                    <p className='columnAT'>{tenant.honorific}</p>
+                    <p className='columnBT'>{tenant.firstName}</p>
+                    <p className='columnCT'>{tenant.lastName}</p>
+                    <p className='columnDT'>{tenant.nbrOfHouseholdMembers}</p>
+                    <p className='columnET'>{tenant.moveInDate}</p>
+                    <p className='columnFT'>{tenant.moveOutDate}</p>
+                    <button onClick={() => handleClickEditTenant(tenant)}>Edit</button>
+                    <button onClick={() => handleTenantPopUp(tenant.id)}>Delete</button>
                 </div>
                ) 
             })}
@@ -117,7 +182,8 @@ function UnitTenants({ authState }) {
                 </header>
                 <section>
                     <AllTenants />
-                    <button onClick={handleClickNewTenant}>Add Tenant</button>
+                    {popUpTenantIsVisible && <MsgPopUp message={"Are You sure you want to delete this Tenant?"} buttonMsg={"Yes, Delete"} handleSubmit={deleteTenant} handleClose={handleTenantPopUp}/>}
+                    {editTenantIsVisible && <EditTenant handleClickEditTenant={handleClickEditTenant} tenants={tenants} setTenants={setTenants} authState={authState} tenantToEdit={tenantToEdit} unitId={unitId}/>}
                     {addTenantIsVisible && <NewTenant handleClickNewTenant={handleClickNewTenant} tenants={tenants} setTenants={setTenants} unitId={unitId} authState={authState}/>}
                 </section>
             </main>

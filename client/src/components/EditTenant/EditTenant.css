@@ -1,0 +1,13 @@
+#newTenantForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#newTenantForm Div {
+    display: flex;
+    flex-direction: column;
+}
+
+#newTenantSaveDiv {
+    align-items: center;
+}

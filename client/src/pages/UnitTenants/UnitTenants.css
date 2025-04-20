@@ -2,7 +2,7 @@
     background-color: rgb(73, 71, 117);
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     height: auto;
     align-items: center;
     color: white;
@@ -18,5 +18,49 @@ body {
 }
 
 #unitHeaderBanner {
-    width: 70%;
+    width: 80%;
+}
+
+#allTenantsDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#allTenantsTitles {
+    display: flex;
+    font-weight: bold;
+    margin: 0;
+}
+
+.tenantDiv {
+    display: flex;
+}
+
+.tenantDiv:hover {
+    background-color: rgb(99, 97, 138);;
+}
+
+.tenantDiv p, #allTenantsTitles p {
+    margin: 0;
+    padding: 1px 10px;
+    align-content: end;
+    height: 30px;
+    font-size: 20px;
+}
+
+.columnAT {
+    width: 115px;
+}
+
+.columnDT {
+    width: 50px;
+}
+
+.columnBT, .columnCT {
+    width: 225px;
+}
+
+.columnET, .columnFT {
+    width: 175px;
 }
