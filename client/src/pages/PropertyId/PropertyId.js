@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import NewUnit from '../../components/NewUnit/NewUnit';
 import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
 import EditUnit from '../../components/EditUnit/EditUnit';
+import BannerButtons from '../../components/BannerButtons/BannerButtons';
 
 function PropertyId({ authState }) {
     //Set display for Pop Ups
@@ -213,6 +214,7 @@ function PropertyId({ authState }) {
                     <button onClick={handleDeleteBttn}>Delete</button>
                     </div>
                     </section>
+                    <BannerButtons/>
                     <UnitSection/>
                     <Outlet context={[property]} />
                 </main>
