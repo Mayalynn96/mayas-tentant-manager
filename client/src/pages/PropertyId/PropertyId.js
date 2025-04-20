@@ -12,8 +12,8 @@ import EditUnit from '../../components/EditUnit/EditUnit';
 function PropertyId({ authState }) {
     //Set display for Pop Ups
     const [popUpUnitIsVisible, setPopUpUnitIsVisible] = useState(false);
-    const [unitToBeDeleted, setUnitToBeDeleted] = useState(null);
-    const [unitToBeUpdated, setUnitToBeUpdated] = useState(null);
+    const [unitToBeDeleted, setUnitToBeDeleted] = useState('');
+    const [unitToBeUpdated, setUnitToBeUpdated] = useState('');
     const [popUpPropertyIsVisible, setPopUpPropertyIsVisible] = useState(false);
     const [addUnitIsVisible, setAddUnitIsVisible] = useState(false);
 
@@ -29,10 +29,10 @@ function PropertyId({ authState }) {
 
     //Handle display for editing unit
     const handleClickEditUnit = (unit) => {
-        if(unitToBeUpdated === null){
+        if(unitToBeUpdated === ''){
             setUnitToBeUpdated(unit)
         } else {
-            setUnitToBeUpdated(null)
+            setUnitToBeUpdated('')
         }
 
         setIsVisibleUnit(!isVisibleUnit);
@@ -84,7 +84,7 @@ function PropertyId({ authState }) {
     const handleUnitPopUp = (unitId) => {
         
         if(unitToBeDeleted === Number){
-            setUnitToBeDeleted(null)
+            setUnitToBeDeleted('')
         } else {
             setUnitToBeDeleted(unitId)
         }

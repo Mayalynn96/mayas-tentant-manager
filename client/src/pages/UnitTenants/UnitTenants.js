@@ -4,13 +4,28 @@ import { useParams, useNavigate } from "react-router-dom";
 import './UnitTenants.css';
 import Loading from '../../components/Loading/Loading';
 import NewTenant from '../../components/NewTenant/NewTenant';
+import EditTenant from '../../components/EditTenant/EditTenant';
 
 function UnitTenants({ authState }) {
     //Setting Pop Up Visibility
     const [addTenantIsVisible, setAddTenantIsVisible] = useState(false);
+    const [editTenantIsVisible, setEditTenantIsVisible] = useState(false);
+    const [tenantToEdit, setTenantToEdit] = useState('');
+
     //Handle display for New Tenant
     const handleClickNewTenant = () => {
     setAddTenantIsVisible(!addTenantIsVisible);
+    };
+
+    //Handle display for Edit Tenant
+    const handleClickEditTenant = (tenant) => {
+        if(tenantToEdit === ''){
+            setTenantToEdit(tenant)
+        } else {
+            setTenantToEdit('')
+        }
+
+        setEditTenantIsVisible(!editTenantIsVisible);
     };
 
     //Setting Property Data and Unit Data
@@ -61,7 +76,6 @@ function UnitTenants({ authState }) {
     }, [authState, propertyId, unitId]);
 
     function AllTenants(){
-        console.log(tenants)
         if (tenants.length === 0) {
             return (
             <div>
@@ -92,7 +106,7 @@ function UnitTenants({ authState }) {
                     <p className='columnDT'>{tenant.nbrOfHouseholdMembers}</p>
                     <p className='columnET'>{tenant.moveInDate}</p>
                     <p className='columnFT'>{tenant.moveOutDate}</p>
-                    <button>Edit</button>
+                    <button onClick={() => handleClickEditTenant(tenant)}>Edit</button>
                     <button>Delete</button>
                 </div>
                ) 
@@ -136,6 +150,7 @@ function UnitTenants({ authState }) {
                 </header>
                 <section>
                     <AllTenants />
+                    {editTenantIsVisible && <EditTenant handleClickEditTenant={handleClickEditTenant} tenants={tenants} setTenants={setTenants} authState={authState} tenantToEdit={tenantToEdit} unitId={unitId}/>}
                     {addTenantIsVisible && <NewTenant handleClickNewTenant={handleClickNewTenant} tenants={tenants} setTenants={setTenants} unitId={unitId} authState={authState}/>}
                 </section>
             </main>

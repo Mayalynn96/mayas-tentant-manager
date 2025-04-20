@@ -2,7 +2,7 @@
     background-color: rgb(73, 71, 117);
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     height: auto;
     align-items: center;
     color: white;
@@ -18,7 +18,7 @@ body {
 }
 
 #unitHeaderBanner {
-    width: 70%;
+    width: 80%;
 }
 
 #allTenantsDiv {
