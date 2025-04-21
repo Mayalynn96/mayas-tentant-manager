@@ -22,6 +22,33 @@ router.get('/', (req, res) => {
     });
 });
 
+//Get all Bills by Property
+router.get('/byProperty/:PropertyId', async (req, res) => {
+    const token = req.headers?.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(403).json({ msg: "you must be logged in to add a Bill to your Property" });
+    }
+    try{
+        const tokenData = jwt.verify(token, process.env.JWT_SECRET);
+        
+        const propertyData = await Property.findByPk(req.params.PropertyId)
+
+        if(!propertyData){
+            return res.status(404).json({ msg: "No property under this Id." });
+        }
+
+        if(tokenData.id !== propertyData.UserId){
+            return res.status(403).json({ msg: "This property doesn't belong to you so you can not add a Unit." });
+        }
+        const allBills = await Bill.findAll({where:{PropertyId : req.params.PropertyId}})
+    
+        res.json(allBills);
+    } catch (err) {
+        res.status(500).json({ message: "Error finding Bills.", error: err.message });
+    }
+    
+})
+
 
 // Adding new Bill to Property
 router.post("/", async (req, res) => {
