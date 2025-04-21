@@ -2,6 +2,7 @@ const User = require('./User');
 const Property = require('./Property');
 const Unit = require('./Unit');
 const Tenant = require('./Tenant');
+const Bill = require('./Bill')
 
 Property.belongsTo(User);
 User.hasMany(Property);
@@ -16,9 +17,15 @@ Unit.hasMany(Tenant);
 Tenant.belongsTo(User);
 User.hasMany(Tenant);
 
+Bill.belongsTo(Property);
+Property.hasMany(Bill);
+Bill.belongsTo(User);
+User.hasMany(Bill);
+
 module.exports = {
     User,
     Property,
     Unit,
-    Tenant
+    Tenant,
+    Bill
 };
