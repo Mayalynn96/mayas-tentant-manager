@@ -42,7 +42,7 @@ router.get('/byProperty/:PropertyId', async (req, res) => {
         }
         const allBills = await Bill.findAll({where:{PropertyId : req.params.PropertyId}})
     
-        res.json(allBills);
+        res.json({bills: allBills, property:propertyData});
     } catch (err) {
         res.status(500).json({ message: "Error finding Bills.", error: err.message });
     }

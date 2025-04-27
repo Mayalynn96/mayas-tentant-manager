@@ -14,6 +14,14 @@ const API = {
         });
         return await res.json();
     },
+    getBillsByPropertyId: async (propertyId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/bills/byProperty/${propertyId}`, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     getPropertyById: async (propertyId, token) => {
         const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
             headers: {

@@ -214,7 +214,7 @@ function PropertyId({ authState }) {
                     <button onClick={handleDeleteBttn}>Delete</button>
                     </div>
                     </section>
-                    <BannerButtons/>
+                    <BannerButtons propertyId={propertyId}/>
                     <UnitSection/>
                     <Outlet context={[property]} />
                 </main>
