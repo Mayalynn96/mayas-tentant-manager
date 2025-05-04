@@ -1,0 +1,10 @@
+#headerSection {
+    top: 0;
+    left: 0;
+    width: 100%;
+    align-items: center;
+}
+
+#deletePopUp {
+    text-align: center;
+}

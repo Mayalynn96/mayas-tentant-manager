@@ -49,6 +49,14 @@ const API = {
         });
         return await res.json();
     },
+    getUnitsByPropertyId: async (propertyId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/units/byPropertyId/${propertyId}`, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     updateUnit: async (unitId, unitData, token) => {
         const res = await fetch(`${URL_PREFIX}/api/units/${unitId}`, {
             method: "Put",

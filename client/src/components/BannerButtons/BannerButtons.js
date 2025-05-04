@@ -14,7 +14,7 @@ function BannerButtons(){
     const { propertyId } = useParams();
 
     return (
-        <div>
+        <div id='BannerButtons'>
             <button onClick={() => redirectTo(`property/${propertyId}`)}>Overview</button>
             <button onClick={() => redirectTo(`property/${propertyId}/bills`)}>Bills</button>
             <button onClick={() => redirectTo(`property/${propertyId}/expense-statement`)}>Generate Expense Statement</button>
