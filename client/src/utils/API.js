@@ -14,6 +14,14 @@ const API = {
         });
         return await res.json();
     },
+    getBillsByPropertyId: async (propertyId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/bills/byProperty/${propertyId}`, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     getPropertyById: async (propertyId, token) => {
         const res = await fetch(`${URL_PREFIX}/api/properties/${propertyId}`, {
             headers: {
@@ -35,6 +43,14 @@ const API = {
     },
     getUnitById: async (unitId, token) => {
         const res = await fetch(`${URL_PREFIX}/api/units/${unitId}`, {
+            headers: {
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
+    getUnitsByPropertyId: async (propertyId, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/units/byPropertyId/${propertyId}`, {
             headers: {
                 "authorization": `Bearer ${token}`
             }

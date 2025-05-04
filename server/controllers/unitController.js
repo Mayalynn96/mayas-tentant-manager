@@ -21,11 +21,41 @@ router.get('/', (req, res) => {
     });
 });
 
+// Get Units by PropertyId
+router.get('/byPropertyId/:propertyId', async (req, res) => {
+    const token = req.headers?.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(403).json({ msg: "you must be logged in to get Property Units" });
+    }
+    try {  
+        const tokenData = jwt.verify(token, process.env.JWT_SECRET);
+
+        const propertyData = await Property.findByPk(req.params.propertyId)
+
+        if(!propertyData){
+            return res.status(404).json({ msg: "No property under this Id." });
+        }
+
+        if(tokenData.id !== propertyData.UserId){
+            return res.status(403).json({ msg: "This property doesn't belong to you so you can get Units." });
+        }
+
+        const unitData = await Unit.findAll({
+            where: {PropertyId: req.params.propertyId},
+            include: [{model: Tenant}]
+        })
+
+        res.status(201).json({unitData});
+    } catch (err) {
+        res.status(500).json({ msg: "Error updating Unit.", error: err.message });
+    }
+});
+
 // Get Unit by Id
 router.get('/:id', async (req, res) => {
     const token = req.headers?.authorization?.split(" ")[1];
     if (!token) {
-        return res.status(403).json({ msg: "you must be logged in to edit a Property" });
+        return res.status(403).json({ msg: "you must be logged in to get a Property" });
     }
     try {  
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);

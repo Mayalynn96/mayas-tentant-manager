@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import API from "../../utils/API";
-import { useParams, Outlet, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import './PropertyId.css';
 import Loading from "../../components/Loading/Loading";
-import EditProperty from '../../components/EditProperty/EditProperty';
 import dayjs from 'dayjs';
 import NewUnit from '../../components/NewUnit/NewUnit';
 import MsgPopUp from '../../components/MsgPopUp/MsgPopUp';
 import EditUnit from '../../components/EditUnit/EditUnit';
 import BannerButtons from '../../components/BannerButtons/BannerButtons';
+import Header from '../../components/Header/Header';
 
 function PropertyId({ authState }) {
     //Set display for Pop Ups
     const [popUpUnitIsVisible, setPopUpUnitIsVisible] = useState(false);
     const [unitToBeDeleted, setUnitToBeDeleted] = useState('');
     const [unitToBeUpdated, setUnitToBeUpdated] = useState('');
-    const [popUpPropertyIsVisible, setPopUpPropertyIsVisible] = useState(false);
     const [addUnitIsVisible, setAddUnitIsVisible] = useState(false);
 
-    //Set display for updating property
-    const [isVisible, setIsVisible] = useState(false);
     //Set display for updating unit
     const [isVisibleUnit, setIsVisibleUnit] = useState(false);
-
-    //Handle display for editing property
-    const handleClickEditProperty = () => {
-        setIsVisible(!isVisible);
-    };
 
     //Handle display for editing unit
     const handleClickEditUnit = (unit) => {
@@ -39,13 +31,8 @@ function PropertyId({ authState }) {
         setIsVisibleUnit(!isVisibleUnit);
     };
     
-    //Handle display for deletion Pop Up
-    const handleDeleteBttn = () => {
-        setPopUpPropertyIsVisible(!popUpPropertyIsVisible);
-      };
 
-    //Setting Property Data and Unit Data
-    const [property, setProperty] = useState([]);
+    //Setting Unit Data
     const { propertyId } = useParams();
     const [units, setUnits] = useState([]);
     const [hasUnits, setHasUnits] = useState(false)
@@ -58,22 +45,25 @@ function PropertyId({ authState }) {
         navigate(`/${destination}`);
     }
 
+    const [isLoading, setIsLoading] = useState(true);
+
     useEffect(() => {
         
         // get Property if user is logged in
-        const getProperty = async () => {
+        const getUnits = async () => {
             if (authState.isLoggedIn) {
-                const userProperty = await API.getPropertyById(propertyId, authState.token)
-                setProperty(userProperty);
-                setUnits(userProperty.Units)
-                if(userProperty.Units[0]){
+                setIsLoading(true)
+                const propertyUnits = await API.getUnitsByPropertyId(propertyId, authState.token)
+                setUnits(propertyUnits.unitData)
+                if(propertyUnits.unitData[0]){
                     setHasUnits(true)
                 }
+                setIsLoading(false)
                 return
             }
         };
 
-        getProperty();
+        getUnits();
     }, [authState, propertyId]);
 
     //Handle display for adding new unit
@@ -93,15 +83,6 @@ function PropertyId({ authState }) {
         setPopUpUnitIsVisible(!popUpUnitIsVisible);
     };
 
-    const deleteProperty = async () => {
-        const deletedProperty = await API.deleteProperty(propertyId, authState.token);
-        if(deleteProperty.error){
-            console.log(deletedProperty.error);
-        }
-        redirectTo("home");
-        return
-    };
-
     const deleteUnit = async () => {
         const deletedUnit = await API.deleteUnit(unitToBeDeleted, authState.token);
         if(deletedUnit.error){
@@ -118,7 +99,7 @@ function PropertyId({ authState }) {
 
     // redirecting to UnitTenants
     const gotToUnit = (id) => {
-        navigate(`/property/${property.id}/unit/${id}`)
+        navigate(`/property/${propertyId}/unit/${id}`)
     }
 
     function UnitSection() {
@@ -133,7 +114,7 @@ function PropertyId({ authState }) {
 
         return (
             <section>
-                <p>Here are your Units!</p>
+                <p>Overview</p>
                 <button onClick={handleClickNewUnit}>Add Unit</button>
                 <p>Total Units: {units.length}</p>
                 <div id="allUnits">
@@ -188,41 +169,21 @@ function PropertyId({ authState }) {
     }
 
     function MainPage() {
-        if (property.address) {
+        if (!isLoading) {
             return (
                 <main id='property'>
                     {isVisibleUnit && <EditUnit handleClickEditUnit={handleClickEditUnit} currentUnit={unitToBeUpdated} units={units} setUnits={setUnits} authState={authState} propertyId={propertyId} />}
                     {popUpUnitIsVisible && <MsgPopUp message={"Are you sure you want to delete this unit? All tenants will be delted as well."} buttonMsg={"Yes, Delete"} handleSubmit={deleteUnit} handleClose={handleUnitPopUp}/>}
-                    {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={property.id}/>}
-                    {isVisible && <EditProperty handleClickEditProperty={handleClickEditProperty} property={property} setProperty={setProperty} authState={authState}/>}
-                    {popUpPropertyIsVisible && 
-                    <div id="deletePopUp" className="fade-in" >
-                        <div className='moveToFront'>
-                            <h2>Are you sure you want to delete this property?</h2>
-                            <p>This action is not reversible and all units, tenants and bills will be deleted as well.</p>
-                        </div>
-                        <div className='moveToFront'>
-                            <button onClick={deleteProperty} className='deleteBtnGeneral'>Yes, Delete</button>
-                            <button onClick={handleDeleteBttn}>Cancel</button>
-                        </div>
-                    </div>}
-                    <section id='propertyBanner'>
-                    <h3 style={{ textTransform: 'capitalize' }}>{property.address}, {property.zipCode} {property.city}, {property.country} </h3>
-                    <div id='bannerBtns'>
-                    <button onClick={() => {redirectTo("home")}}>Home</button>
-                    <button onClick={handleClickEditProperty}>Edit</button>
-                    <button onClick={handleDeleteBttn}>Delete</button>
-                    </div>
-                    </section>
-                    <BannerButtons/>
+                    {addUnitIsVisible && <NewUnit handleClickNewUnit={handleClickNewUnit} units={units} setUnits={setUnits} authState={authState} propertyId={propertyId}/>}   
+                    <Header authState={authState}/>
+                    <BannerButtons propertyId={propertyId}/>
                     <UnitSection/>
-                    <Outlet context={[property]} />
                 </main>
             )
-        } else if(property.msg){
+        } else if(units.msg){
             return (
                 <main>
-                    <p>{property.msg}</p>
+                    <p>{units.msg}</p>
                 </main>
             )
         } else {
