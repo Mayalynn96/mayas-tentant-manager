@@ -33,12 +33,9 @@ function Header({ authState }) {
     useEffect(() => {
         // get Property if user is logged in
         const getProperty = async () => {
-            console.log(authState.authState)
             if (authState.isLoggedIn) {
                 const userProperty = await API.getPropertyById(propertyId, authState.token)
                 setProperty(userProperty);
-                console.log(userProperty)
-                console.log("isLogged in")
                 return
             }
         };

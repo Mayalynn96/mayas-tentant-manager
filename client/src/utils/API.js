@@ -142,6 +142,17 @@ const API = {
         });
         return await res.json();
     },
+    createNewBill: async (billData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/bills`, {
+            method: "POST",
+            body: JSON.stringify(billData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     isValidToken: async token => {
         const res = await fetch(`${URL_PREFIX}/api/users/isValidToken`, {
             headers: {
