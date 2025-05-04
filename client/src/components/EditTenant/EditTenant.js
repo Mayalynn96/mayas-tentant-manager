@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './EditTenant.css';
 import API from '../../utils/API';
 
-function NewTenant({handleClickEditTenant, tenants, setTenants, authState, unitId, tenantToEdit}) {
+function EditTenant({handleClickEditTenant, tenants, setTenants, authState, unitId, tenantToEdit}) {
     const [honorificInput, setHonorificInput] = useState(tenantToEdit.honorific);
     const [firstNameInput, setFirstNameInput] = useState(tenantToEdit.firstName);
     const [lastNameInput, setLastNameInput] = useState(tenantToEdit.lastName);
@@ -93,4 +93,4 @@ function NewTenant({handleClickEditTenant, tenants, setTenants, authState, unitI
     )
 }
 
-export default NewTenant;
+export default EditTenant;

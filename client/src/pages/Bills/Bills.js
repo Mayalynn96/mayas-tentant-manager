@@ -5,16 +5,30 @@ import API from '../../utils/API';
 import Header from '../../components/Header/Header';
 import BannerButtons from '../../components/BannerButtons/BannerButtons';
 import NewBill from '../../components/NewBill/NewBill';
+import EditBill from '../../components/EditBill/EditBill';
 
 function Bills({ authState }) {
     const [bills, setBills] = useState([]);
+    const [billToUpdate, setBillToUpdate] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const { propertyId } = useParams();
     const [newBillVisible, setNewBillVisible] = useState(false);
+    const [editBillIsVisible, setEditBillIsVisible] = useState(false);
 
     //Handle display for adding new bill
     const handleClickNewBill = () => {
         setNewBillVisible(!newBillVisible);
+    };
+
+    //Handle display for Edit bill
+    const handleClickEditBill = (bill) => {
+        if(billToUpdate === ''){
+            setBillToUpdate(bill)
+        } else {
+            setBillToUpdate('')
+        }
+
+        setEditBillIsVisible(!editBillIsVisible);
     };
 
     useEffect(() => {
@@ -65,7 +79,7 @@ function Bills({ authState }) {
                                 <p className='columnCBills'>{bill.company}</p>
                                 <p className='columnDBills'>{bill.date}</p>
                                 <p className='columnEBills'>{formatter.format(bill.amount)}</p>
-                                <button>Edit</button> 
+                                <button onClick={() => handleClickEditBill(bill)}>Edit</button> 
                                 <button>Delete</button>
                             </div>
                         )
@@ -83,6 +97,7 @@ function Bills({ authState }) {
 
     return (
         <main>
+            {editBillIsVisible && <EditBill handleClickEditBill={handleClickEditBill} bills={bills} setBills={setBills} authState={authState} propertyId={propertyId} billToEdit={billToUpdate}/>}
             {newBillVisible && <NewBill handleClickNewBill={handleClickNewBill} bills={bills} setBills={setBills} authState={authState} propertyId={propertyId}/>}
             <Header authState={authState} />
             <BannerButtons />

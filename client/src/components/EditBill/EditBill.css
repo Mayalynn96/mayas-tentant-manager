@@ -1,0 +1,19 @@
+#editBillForm {
+    display: flex;
+    flex-direction: column;
+}
+
+#editBillForm Div {
+    display: flex;
+    flex-direction: column;
+}
+
+#editBillSaveDiv {
+    text-align: center;
+}
+
+#editBillFormDiv {
+    display: flex;
+    flex-direction: column;
+}
+

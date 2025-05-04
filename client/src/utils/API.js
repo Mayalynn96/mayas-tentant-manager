@@ -153,6 +153,17 @@ const API = {
         });
         return await res.json();
     },
+    updateBill: async (billId, billData, token) => {
+        const res = await fetch(`${URL_PREFIX}/api/bills/${billId}`, {
+            method: "PUT",
+            body: JSON.stringify(billData),
+            headers: {
+                "Content-Type": "application/json",
+                "authorization": `Bearer ${token}`
+            }
+        });
+        return await res.json();
+    },
     isValidToken: async token => {
         const res = await fetch(`${URL_PREFIX}/api/users/isValidToken`, {
             headers: {
