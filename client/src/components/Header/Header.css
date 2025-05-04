@@ -5,6 +5,16 @@
     align-items: center;
 }
 
+#propertyBanner{
+    background-color: rgb(73, 71, 117);
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    height: auto;
+    align-items: center;
+    color: white;
+}
+
 #deletePopUp {
     text-align: center;
 }

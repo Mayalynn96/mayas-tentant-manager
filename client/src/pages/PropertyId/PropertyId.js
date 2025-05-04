@@ -114,7 +114,7 @@ function PropertyId({ authState }) {
 
         return (
             <section>
-                <p>Overview</p>
+                <h3>Overview</h3>
                 <button onClick={handleClickNewUnit}>Add Unit</button>
                 <p>Total Units: {units.length}</p>
                 <div id="allUnits">

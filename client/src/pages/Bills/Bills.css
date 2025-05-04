@@ -1,0 +1,35 @@
+#billsHeader {
+    display: flex;
+    font-size: 20px;
+    margin: 0;
+    padding: 5px;
+    align-content: end;
+    height: 40px;
+}
+
+.columnABills, .columnBBills, .columnDBills, .columnEBills {
+    width: 150px;
+}
+
+.columnCBills {
+    width: 250px;
+}
+
+.columnEBills {
+    text-align: end;
+    margin-right: 10px;
+}
+
+.eachBill {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    height: 30px;
+    font-size: 18px;
+    margin: 0;
+    padding: 5px;
+}
+
+.eachBill:hover {
+    background-color: rgb(99, 97, 138);
+}
